@@ -8,8 +8,8 @@ Escreva um ou dois parágrafos resumindo o objetivo do seu projeto.
 * Bernardo de Resende Marcelino
 * Miguel Figueiredo Diniz
 * João Marcelo Carvalho Pereira Araujo
-* Nome completo do aluno 4
-* Nome completo do aluno 4
+* Gabriel Reis
+* Otto Esteves Oliveira
 
 ## Professor responsável 
 
