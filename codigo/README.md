@@ -1,5 +1,4 @@
-# Código do Projeto
+# Documentação do código do Projeto Xulambs Park
 
-Mantenha neste diretório todo o código fonte do projeto. 
-
-Se necessário, descreva neste arquivo aspectos relevantes da estrutura de diretórios criada para organização do código.
+Pacote aplication contém o arquivo java executável
+Pacote services contém as classes Cliente, Cobrança, Parques de Estacionamento, Sistema de Estacionamento, Vaga e Veículo
