@@ -75,20 +75,7 @@ public class Cliente {
 		
 	}
 
-	public void associarVeiculo(Veiculo veiculo) {
-		// Verifica se o veículo já está associado ao cliente.
-		for (Veiculo v : veiculos) {
-			if (v.getPlaca().equals(veiculo.getPlaca())) {
-				System.out.println("Veículo já está associado ao cliente.");
-				return;
-			}
-		}
 
-		// Associa o veículo ao cliente.
-		veiculos.add(veiculo);
-		System.out.println("Veículo associado com sucesso ao cliente " + identificador);
-	}
-	
 	
 	
 }
