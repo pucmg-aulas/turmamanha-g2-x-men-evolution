@@ -2,13 +2,14 @@ package services;
 
 public class Cliente {
 	
-	/*ATRIBUTOS*/
+	// ATRIBUTOS
 	private String identificador;
 	private String cpf;
 	private String codigo;
 	private Veiculo veiculos[];
 	
-	/*CONSTRUTOR*/
+
+	// CONSTRUTOR
 	public Cliente(String identificador, String cpf, String codigo, Veiculo[] veiculos) {
 		super();
 		this.identificador = identificador;
@@ -19,7 +20,7 @@ public class Cliente {
 	
 	
 	
-	/* GETS E SETS*/
+	// GETS E SETS
 	public String getIdentificador() {
 		return identificador;
 	}
@@ -61,7 +62,7 @@ public class Cliente {
 	
 	
 	
-	/*MÉTODOS*/
+	// MÉTODOS
 	public void cadastrarCliente(){
 		
 		
