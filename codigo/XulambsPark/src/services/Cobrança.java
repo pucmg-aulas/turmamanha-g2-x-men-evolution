@@ -1,58 +1,39 @@
-package services;
+package entities;
 
-public class Cobrança {
+import java.io.Serializable;
+import java.time.LocalDateTime;
+import java.time.temporal.ChronoUnit;
+
+public class Cobrança implements Serializable {
 	
-	/*ATRIBUTOS*/
-	private double valorTotal;
-	private double valorDeEntrada;
-	
-	
-	
-	/*CONSTRUTOR*/
-	public Cobrança(double valorTotal, double valorDeEntrada) {
-		super();
-		this.valorTotal = valorTotal;
-		this.valorDeEntrada = valorDeEntrada;
+    private LocalDateTime horarioEntrada;
+    private LocalDateTime horarioSaida;
+
+    public Cobrança(LocalDateTime entrada, LocalDateTime saida) {
+        this.horarioEntrada = entrada;
+        this.horarioSaida = saida;
+    }
+
+    public LocalDateTime getHorarioEntrada() {
+        return horarioEntrada;
+    }
+
+    public LocalDateTime getHorarioSaida() {
+        return horarioSaida;
+    }
+
+	public void setHorarioEntrada(LocalDateTime horarioEntrada) {
+		this.horarioEntrada = horarioEntrada;
 	}
 
-	
-	
-	
-	/*GETS E SETS*/
-	public double getValorTotal() {
-		return valorTotal;
-	}
-
-
-	public void setValorTotal(double valorTotal) {
-		this.valorTotal = valorTotal;
-	}
-
-
-	public double getValorDeEntrada() {
-		return valorDeEntrada;
-	}
-
-
-	public void setValorDeEntrada(double valorDeEntrada) {
-		this.valorDeEntrada = valorDeEntrada;
+	public void setHorarioSaida(LocalDateTime horarioSaida) {
+		this.horarioSaida = horarioSaida;
 	}
 	
-	
-	
-	
-	/*MÉTODOS*/
-	public void calcularEstacionamento() {
-		
-		
-		
-	}
-	
-	
-	public void pagarEstacionamento() {
-		
-		
-		
-	}
+	public double calcularPreco() {
+        long minutos = ChronoUnit.MINUTES.between(horarioEntrada, horarioSaida);
+        double total = (minutos / 15) * 4;
+        return Math.min(total, 50); 
+    }
 	
 }
