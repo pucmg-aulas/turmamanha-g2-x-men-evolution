@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ProjectModuleManager">
+    <modules>
+      <module fileurl="file://$PROJECT_DIR$/codigo/XulambsPark/XulambsPark.iml" filepath="$PROJECT_DIR$/codigo/XulambsPark/XulambsPark.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/turmamanha-g2-x-men-evolution.iml" filepath="$PROJECT_DIR$/.idea/turmamanha-g2-x-men-evolution.iml" />
+    </modules>
+  </component>
+</project>
