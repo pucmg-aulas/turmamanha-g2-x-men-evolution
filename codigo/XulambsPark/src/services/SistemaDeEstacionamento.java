@@ -2,6 +2,9 @@ package services;
 import java.util.Scanner;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.io.IOException;
+import java.io.FileWriter;
+import java.io.BufferedWriter;
 
 
 public class SistemaDeEstacionamento {
@@ -138,6 +141,9 @@ public class SistemaDeEstacionamento {
 					// Associar o veículo à vaga (exemplo: vaga.setVeiculo(veiculo);)
 					System.out.println("Veículo " + veiculo.getPlaca() + " foi associado à vaga " + novaVaga.getCodigoDaVaga() + " no parque " + codigoDoParque);
 
+					// Salvar informações no arquivo de texto
+					salvarInformacoesNoArquivo(parqueSelecionado, novaVaga, cliente, veiculo, cobranca);
+
 					break;
 				}
 			}
@@ -151,6 +157,32 @@ public class SistemaDeEstacionamento {
 			System.out.println("Erro: " + e.getMessage());
 		} catch (Exception e) {
 			System.out.println("Erro inesperado: " + e.getMessage());
+		}
+	}
+
+	private void salvarInformacoesNoArquivo(ParquesDeEstacionamento parque, Vaga vaga, Cliente cliente, Veiculo veiculo, Cobrança cobranca) {
+		String nomeArquivo = "registro_vagas.txt";
+
+		try (BufferedWriter writer = new BufferedWriter(new FileWriter(nomeArquivo, true))) {
+			writer.write("Parque: " + parque.getNomeDoParque());
+			writer.newLine();
+			writer.write("Código do Parque: " + parque.getCodigoDoParque());
+			writer.newLine();
+			writer.write("Vaga: " + vaga.getCodigoDaVaga());
+			writer.newLine();
+			writer.write("Cliente: " + cliente.getNome());
+			writer.newLine();
+			writer.write("Veículo: " + veiculo.getPlaca());
+			writer.newLine();
+			writer.write("Horário de Entrada: " + cobranca.getHorarioDeEntrada().format(DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm")));
+			writer.newLine();
+			writer.write("Horário de Saída: " + cobranca.getHorarioDeSaida().format(DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm")));
+			writer.newLine();
+			writer.write("-----------------------------------");
+			writer.newLine();
+			System.out.println("Informações da vaga salvas no arquivo.");
+		} catch (IOException e) {
+			System.out.println("Erro ao salvar informações no arquivo: " + e.getMessage());
 		}
 	}
 
