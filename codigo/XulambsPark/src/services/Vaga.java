@@ -13,12 +13,24 @@ public class Vaga {
         this.codigoDaVaga = codigoDaVaga;
     }
 
-    //preço sem desconto
+    // preço sem desconto
+
     public double aplicarDescontoOuAcrescimo(double precoBase) {
         return precoBase;
     }
 
+    // verificar vaga
 
+    public static boolean verificarVaga(Vaga[] vagas, Vaga vaga) {
+        for (Vaga v : vagas) {
+            if (v.getCodigoDaVaga().equals(vaga.getCodigoDaVaga())) {
+                return true; // Vaga encontrada
+            }
+        }
+        return false; // Vaga não encontrada
+    }
+
+    // subclasse VagaVip
     public static class VagaVip extends Vaga {
 
         public VagaVip(String codigoDaVaga) {
