@@ -31,7 +31,7 @@ public class Vaga {
         }
     }
 
-    // Subclasse VagaIdoso
+    // subclasse VagaIdoso
     public static class VagaIdoso extends Vaga {
 
         public VagaIdoso(String codigoDaVaga) {
@@ -44,7 +44,7 @@ public class Vaga {
         }
     }
 
-    // Subclasse VagaPCD
+    // subclasse VagaPCD
     public static class VagaPCD extends Vaga {
 
         public VagaPCD(String codigoDaVaga) {
