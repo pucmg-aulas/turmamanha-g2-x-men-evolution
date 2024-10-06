@@ -24,8 +24,8 @@ public class SistemaDeEstacionamento {
 	/*GETS E SETS*/
 	public void getparques(ParquesDeEstacionamento[] parques) {
 		System.out.println("Imprimindo parques cadastrados...");
-		for(int i = 0; i< parques.length; i++){
-			System.out.println((i + 1) + "Parque"+ parques[i].getCodigoDoParque());
+		for (int i = 0; i < parques.length; i++) {
+			System.out.println((i + 1) + "Parque" + parques[i].getCodigoDoParque());
 		}
 	}
 
@@ -41,6 +41,7 @@ public class SistemaDeEstacionamento {
 			System.out.println((i + 1) + ". Parque Código: " + parques[i].getCodigoDoParque());
 		}
 	}
+
 	public void listarVagas() {
 		Scanner sc = new Scanner(System.in);
 
@@ -89,6 +90,7 @@ public class SistemaDeEstacionamento {
 			sc.close();
 		}
 	}
+
 	public void cadastrarVaga(String codigoDoParque, Vaga novaVaga, Cliente cliente, Veiculo veiculo, Cobrança cobranca) {
 		try {
 			// Buscar o parque pelo código fornecido
@@ -118,7 +120,7 @@ public class SistemaDeEstacionamento {
 					}
 
 					// Verifica se a vaga é especial e se o cliente pode usar
-					if ((vaga instanceof VagaIdoso || vaga instanceof VagaPCD || vaga instanceof VagaVip) && !cliente.isVagaEspecial()) {
+					if ((vaga instanceof Vaga.VagaIdoso || vaga instanceof Vaga.VagaPCD || vaga instanceof Vaga.VagaVip) && !cliente.isVagaEspecial()) {
 						throw new IllegalArgumentException("Cliente não tem direito a usar vaga especial.");
 					}
 
@@ -170,7 +172,7 @@ public class SistemaDeEstacionamento {
 			writer.newLine();
 			writer.write("Vaga: " + vaga.getCodigoDaVaga());
 			writer.newLine();
-			writer.write("Cliente: " + cliente.getNome());
+			writer.write("Cliente: " + cliente.getIdentificador());
 			writer.newLine();
 			writer.write("Veículo: " + veiculo.getPlaca());
 			writer.newLine();
@@ -228,9 +230,12 @@ public class SistemaDeEstacionamento {
 				throw new IllegalStateException("Pagamento não realizado. A vaga não pode ser liberada.");
 			}
 
-			// Liberar a vaga após o pagamento (exemplo: vagaSelecionada.liberarVeiculo())
-			// Aqui, você implementa a lógica para liberar a vaga.
+			// Liberar a vaga após o pagamento
+			// Aqui você implementa a lógica para liberar a vaga.
 			System.out.println("Pagamento realizado com sucesso. A vaga " + codigoDaVaga + " no parque " + codigoDoParque + " foi liberada.");
+
+			// Remover informações da vaga do arquivo
+			removerInformacoesDoArquivo(codigoDoParque, codigoDaVaga);
 
 		} catch (IllegalArgumentException e) {
 			System.out.println("Erro: " + e.getMessage());
@@ -238,6 +243,45 @@ public class SistemaDeEstacionamento {
 			System.out.println("Erro: " + e.getMessage());
 		} catch (Exception e) {
 			System.out.println("Erro inesperado: " + e.getMessage());
+		}
+	}
+
+	private void removerInformacoesDoArquivo(String codigoDoParque, String codigoDaVaga) {
+		String nomeArquivo = "registro_vagas.txt";
+		StringBuilder novoConteudo = new StringBuilder();
+
+		try (Scanner fileScanner = new Scanner(new java.io.File(nomeArquivo))) {
+			boolean ignorarLinhas = false;
+
+			while (fileScanner.hasNextLine()) {
+				String linha = fileScanner.nextLine();
+
+				// Verificar se a linha corresponde ao parque e vaga liberada
+				if (linha.contains("Código do Parque: " + codigoDoParque) && linha.contains("Vaga: " + codigoDaVaga)) {
+					ignorarLinhas = true; // Encontrou a entrada da vaga, começa a ignorar as linhas associadas
+				}
+
+				if (!ignorarLinhas) {
+					novoConteudo.append(linha).append(System.lineSeparator());
+				}
+
+				// Quando chegar à linha separadora (----), parar de ignorar
+				if (linha.contains("-----------------------------------")) {
+					ignorarLinhas = false;
+				}
+			}
+
+		} catch (IOException e) {
+			System.out.println("Erro ao ler o arquivo: " + e.getMessage());
+			return;
+		}
+
+		// Reescrever o arquivo com o novo conteúdo (sem as linhas da vaga liberada)
+		try (BufferedWriter writer = new BufferedWriter(new FileWriter(nomeArquivo))) {
+			writer.write(novoConteudo.toString());
+			System.out.println("Informações da vaga " + codigoDaVaga + " removidas do arquivo.");
+		} catch (IOException e) {
+			System.out.println("Erro ao reescrever o arquivo: " + e.getMessage());
 		}
 	}
 }
