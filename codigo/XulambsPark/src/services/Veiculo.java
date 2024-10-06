@@ -1,79 +1,63 @@
 package services;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Scanner;
+
 public class Veiculo {
-	
-	/*ATRIBUTOS*/
-	private String placa;
-	private String modelo;
-	private String cor;
-	private String tipoDeVeiculo;
-	
-	/*CONSTRUTOR*/
-	public Veiculo(String placa, String modelo, String cor, String tipoDeVeiculo) {
-		super();
-		this.placa = placa;
-		this.modelo = modelo;
-		this.cor = cor;
-		this.tipoDeVeiculo = tipoDeVeiculo;
-	}
-	
-	/*GETS E SETS*/
-	public String getPlaca() {
-		return placa;
-	}
+    private String placa;
+    private String modelo;
+    private String cor;
+    private String tipoDeVeiculo;
+    private static List<Veiculo> veiculosRegistrados = new ArrayList<>();
 
+    public Veiculo(String placa, String modelo, String cor, String tipoDeVeiculo) {
+        this.placa = placa;
+        this.modelo = modelo;
+        this.cor = cor;
+        this.tipoDeVeiculo = tipoDeVeiculo;
+        veiculosRegistrados.add(this);
+    }
 
+    public String getPlaca() {
+        return placa;
+    }
 
-	public void setPlaca(String placa) {
-		this.placa = placa;
-	}
+    public String getModelo() {
+        return modelo;
+    }
 
+    public String getCor() {
+        return cor;
+    }
 
+    public String getTipoDeVeiculo() {
+        return tipoDeVeiculo;
+    }
 
-	public String getModelo() {
-		return modelo;
-	}
+    public static Veiculo buscarVeiculoPorPlaca(String placa) {
+        for (Veiculo veiculo : veiculosRegistrados) {
+            if (veiculo.getPlaca().equals(placa)) {
+                return veiculo;
+            }
+        }
+        return null;
+    }
 
+    public static Veiculo cadastrarVeiculo() {
+        Scanner scanner = new Scanner(System.in);
 
+        System.out.print("Digite a placa do veículo: ");
+        String placa = scanner.nextLine();
+        System.out.print("Digite o modelo do veículo: ");
+        String modelo = scanner.nextLine();
+        System.out.print("Digite a cor do veículo: ");
+        String cor = scanner.nextLine();
+        System.out.print("Digite o tipo de veículo: ");
+        String tipoDeVeiculo = scanner.nextLine();
 
-	public void setModelo(String modelo) {
-		this.modelo = modelo;
-	}
-
-
-
-	public String getCor() {
-		return cor;
-	}
-
-
-
-	public void setCor(String cor) {
-		this.cor = cor;
-	}
-
-
-
-	public String getTipoDeVeiculo() {
-		return tipoDeVeiculo;
-	}
-
-
-
-	public void setTipoDeVeiculo(String tipoDeVeiculo) {
-		this.tipoDeVeiculo = tipoDeVeiculo;
-	}
-
-
-	
-	
-	/*MÉTODOS*/
-	public void cadastrarVeiculo() {
-		
-		
-		
-	}
-
-
-	
+        Veiculo veiculo = new Veiculo(placa, modelo, cor, tipoDeVeiculo);
+        System.out.println("Veículo cadastrado com sucesso.");
+        return veiculo;
+    }
 }
