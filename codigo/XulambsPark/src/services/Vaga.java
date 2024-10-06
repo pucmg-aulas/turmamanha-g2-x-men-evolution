@@ -1,17 +1,10 @@
-import java.time.LocalDate;
-import java.time.LocalDateTime;
-
 public class Vaga {
-    //atributos
     private String codigoDaVaga;
 
-    //construtor da classe pai
     public Vaga(String codigoDaVaga) {
-        super();
         this.codigoDaVaga = codigoDaVaga;
     }
 
-    //get set
     public String getCodigoDaVaga() {
         return codigoDaVaga;
     }
@@ -20,66 +13,59 @@ public class Vaga {
         this.codigoDaVaga = codigoDaVaga;
     }
 
-    //metodos
+    // preço sem desconto
 
-    public boolean verificarVaga(Vaga[] vagas, Vaga vaga) {
+    public double aplicarDescontoOuAcrescimo(double precoBase) {
+        return precoBase;
+    }
+
+    // verificar vaga
+
+    public static boolean verificarVaga(Vaga[] vagas, Vaga vaga) {
         for (Vaga v : vagas) {
             if (v.getCodigoDaVaga().equals(vaga.getCodigoDaVaga())) {
-                return true;
+                return true; // Vaga encontrada
             }
         }
-        return false;
+        return false; // Vaga não encontrada
     }
-    public String getCodigoDaVaga(String codigoDaVaga) {
-        return this.codigoDaVaga.equals(codigoDaVaga) ? this.codigoDaVaga : null;
-    }
-//idoso: 15% pcd :13% vip:20% mais caro
 
-    // Classe VagaVip
-    public class VagaVip extends Vaga {
+    // subclasse VagaVip
+    public static class VagaVip extends Vaga {
 
-        // Construtor da classe VagaVip 
         public VagaVip(String codigoDaVaga) {
             super(codigoDaVaga);
         }
 
-
-        public void IncrementarTarifaVIP(Vaga vaga) {
-
-            System.out.println("Tarifa VIP acrescida em 20% para a vaga: " + vaga.getCodigoDaVaga());
+        @Override
+        public double aplicarDescontoOuAcrescimo(double precoBase) {
+            return precoBase * 1.20; // Acréscimo de 20% para vagas VIP
         }
     }
 
-    // Classe VagaIdoso
-    public class VagaIdoso extends Vaga {
+    // subclasse VagaIdoso
+    public static class VagaIdoso extends Vaga {
 
-        // Construtor da classe VagaIdoso
         public VagaIdoso(String codigoDaVaga) {
             super(codigoDaVaga);
         }
 
-
-        public void IncrementarDescontoIdoso(Vaga vaga) {
-
-            System.out.println("Desconto de 15% aplicado para a vaga: " + vaga.getCodigoDaVaga());
+        @Override
+        public double aplicarDescontoOuAcrescimo(double precoBase) {
+            return precoBase * 0.85; // Desconto de 15% para vagas Idoso
         }
     }
 
-    // Classe VagaPCD
-    public class VagaPCD extends Vaga {
-
+    // subclasse VagaPCD
+    public static class VagaPCD extends Vaga {
 
         public VagaPCD(String codigoDaVaga) {
             super(codigoDaVaga);
         }
 
-
-        public void IncrementarDescontoPCD(Vaga vaga) {
-
-            System.out.println("Desconto de 13% aplicado para a vaga: " + vaga.getCodigoDaVaga());
+        @Override
+        public double aplicarDescontoOuAcrescimo(double precoBase) {
+            return precoBase * 0.87; // Desconto de 13% para vagas PCD
         }
     }
-
-
-
 }
