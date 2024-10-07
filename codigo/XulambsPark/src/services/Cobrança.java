@@ -1,58 +1,43 @@
-package services;
+package entities;
 
-public class Cobrança {
-	
-	/*ATRIBUTOS*/
-	private double valorTotal;
-	private double valorDeEntrada;
-	
-	
-	
-	/*CONSTRUTOR*/
-	public Cobrança(double valorTotal, double valorDeEntrada) {
-		super();
-		this.valorTotal = valorTotal;
-		this.valorDeEntrada = valorDeEntrada;
-	}
+import java.io.Serializable;
+import java.time.LocalDateTime;
+import java.time.temporal.ChronoUnit;
 
-	
-	
-	
-	/*GETS E SETS*/
-	public double getValorTotal() {
-		return valorTotal;
-	}
+public class Cobrança implements Serializable {
+    private static final long serialVersionUID = 1L;
+    private LocalDateTime horarioEntrada;
+    private LocalDateTime horarioSaida;
+    private double valorCobrado;
+
+    public Cobrança(LocalDateTime horarioEntrada) {
+        this.horarioEntrada = horarioEntrada;
+        this.horarioSaida = null;
+        this.valorCobrado = 0.0;
+    }
 
 
-	public void setValorTotal(double valorTotal) {
-		this.valorTotal = valorTotal;
-	}
+    public void setHorarioSaida(LocalDateTime horarioSaida) {
+        this.horarioSaida = horarioSaida;
+        calcularCobrança();
+    }
 
 
-	public double getValorDeEntrada() {
-		return valorDeEntrada;
-	}
+    public void registrarSaida(LocalDateTime horarioSaida) {
+        setHorarioSaida(horarioSaida);
+    }
 
+    public double getValorCobrado() {
+        return valorCobrado;
+    }
 
-	public void setValorDeEntrada(double valorDeEntrada) {
-		this.valorDeEntrada = valorDeEntrada;
-	}
-	
-	
-	
-	
-	/*MÉTODOS*/
-	public void calcularEstacionamento() {
-		
-		
-		
-	}
-	
-	
-	public void pagarEstacionamento() {
-		
-		
-		
-	}
-	
+    private void calcularCobrança() {
+        if (horarioSaida != null) {
+            long horas = ChronoUnit.HOURS.between(horarioEntrada, horarioSaida);
+            if (horas < 1) {
+                horas = 1;
+            }
+            valorCobrado = horas * 5.0;
+        }
+    }
 }
