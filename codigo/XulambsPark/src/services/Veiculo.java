@@ -1,79 +1,47 @@
-package services;
+package entities;
+
+import java.util.Scanner;
 
 public class Veiculo {
-	
-	/*ATRIBUTOS*/
-	private String placa;
-	private String modelo;
-	private String cor;
-	private String tipoDeVeiculo;
-	
-	/*CONSTRUTOR*/
-	public Veiculo(String placa, String modelo, String cor, String tipoDeVeiculo) {
-		super();
-		this.placa = placa;
-		this.modelo = modelo;
-		this.cor = cor;
-		this.tipoDeVeiculo = tipoDeVeiculo;
-	}
-	
-	/*GETS E SETS*/
-	public String getPlaca() {
-		return placa;
-	}
+    private String placa;
+    private String cor;
+    private String modelo;
+    private String tipo;
 
+    // Construtor
+    public Veiculo(String placa, String cor, String modelo, String tipo) {
+        this.placa = placa;
+        this.cor = cor;
+        this.modelo = modelo;
+        this.tipo = tipo;
+    }
 
+    // Getters
+    public String getPlaca() {
+        return placa;
+    }
 
-	public void setPlaca(String placa) {
-		this.placa = placa;
-	}
+    // Método estático para cadastrar veículo
+    public static Veiculo cadastrarVeiculo(Scanner scanner) {
+        System.out.print("Digite a placa do veículo: ");
+        String placa = scanner.nextLine();
 
+        System.out.print("Digite a cor do veículo: ");
+        String cor = scanner.nextLine();
 
+        System.out.print("Digite o modelo do veículo: ");
+        String modelo = scanner.nextLine();
 
-	public String getModelo() {
-		return modelo;
-	}
+        System.out.print("Digite o tipo do veículo: ");
+        String tipo = scanner.nextLine();
 
+        // Cria uma nova instância de Veiculo
+        return new Veiculo(placa, cor, modelo, tipo);
+    }
+    
+    @Override
+    public String toString() {
+        return "Placa: " + placa + ", Cor: " + cor + ", Modelo: " + modelo + ", Tipo: " + tipo;
+    }
 
-
-	public void setModelo(String modelo) {
-		this.modelo = modelo;
-	}
-
-
-
-	public String getCor() {
-		return cor;
-	}
-
-
-
-	public void setCor(String cor) {
-		this.cor = cor;
-	}
-
-
-
-	public String getTipoDeVeiculo() {
-		return tipoDeVeiculo;
-	}
-
-
-
-	public void setTipoDeVeiculo(String tipoDeVeiculo) {
-		this.tipoDeVeiculo = tipoDeVeiculo;
-	}
-
-
-	
-	
-	/*MÉTODOS*/
-	public void cadastrarVeiculo() {
-		
-		
-		
-	}
-
-
-	
 }
