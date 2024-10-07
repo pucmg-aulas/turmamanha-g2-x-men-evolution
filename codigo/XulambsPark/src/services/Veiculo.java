@@ -2,6 +2,7 @@ package services;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Scanner;
 
 public class Veiculo {
 
@@ -21,6 +22,14 @@ public class Veiculo {
 		this.tipoDeVeiculo = tipoDeVeiculo;
 	}
 
+	public static Veiculo buscarVeiculoPorPlaca(String placa) {
+		for (Veiculo veiculo : veiculosCadastrados) {
+			if (veiculo.getPlaca().equalsIgnoreCase(placa)) {
+				return veiculo;
+			}
+		}
+		return null; // Return null if no vehicle is found with the given plate
+	}
 	/* GETS E SETS */
 	public String getPlaca() {
 		return placa;
@@ -56,7 +65,17 @@ public class Veiculo {
 
 	/* MÉTODOS */
 	public void cadastrarVeiculo() {
-		if (isPlacaValida(placa) && !modelo.isEmpty()) { // Validações simples
+		Scanner scanner = new Scanner(System.in);
+		System.out.print("Digite a placa: ");
+		this.placa = scanner.nextLine();
+		System.out.print("Digite o modelo: ");
+		this.modelo = scanner.nextLine();
+		System.out.print("Digite a cor: ");
+		this.cor = scanner.nextLine();
+		System.out.print("Digite o tipo de veículo: ");
+		this.tipoDeVeiculo = scanner.nextLine();
+
+		if (isPlacaValida(this.placa) && !this.modelo.isEmpty()) { // Validações simples
 			veiculosCadastrados.add(this);
 			System.out.println("Veículo cadastrado com sucesso: " + this);
 		} else {
@@ -69,7 +88,6 @@ public class Veiculo {
 		return placa.matches("[A-Z]{3}[0-9][A-Z][0-9]{2}"); // Exemplo: ABC1D23
 	}
 
-
 	@Override
 	public String toString() {
 		return "Veiculo [placa=" + placa + ", modelo=" + modelo + ", cor=" + cor + ", tipoDeVeiculo=" + tipoDeVeiculo + "]";
@@ -77,5 +95,41 @@ public class Veiculo {
 
 	public static List<Veiculo> getVeiculosCadastrados() {
 		return veiculosCadastrados;
+	}
+
+	public static void main(String[] args) {
+		Scanner scanner = new Scanner(System.in);
+		while (true) {
+			System.out.println("Menu de Veículos:");
+			System.out.println("1. Cadastrar Veículo");
+			System.out.println("2. Listar Veículos Cadastrados");
+			System.out.println("3. Sair");
+			System.out.print("Escolha uma opção: ");
+			int opcao = scanner.nextInt();
+			scanner.nextLine(); // Consume newline
+
+			switch (opcao) {
+				case 1:
+					Veiculo veiculo = new Veiculo("", "", "", "");
+					veiculo.cadastrarVeiculo();
+					break;
+				case 2:
+					listarVeiculos();
+					break;
+				case 3:
+					System.out.println("Saindo...");
+					scanner.close();
+					return;
+				default:
+					System.out.println("Opção inválida. Tente novamente.");
+			}
+		}
+	}
+
+	private static void listarVeiculos() {
+		System.out.println("Veículos cadastrados:");
+		for (Veiculo veiculo : Veiculo.getVeiculosCadastrados()) {
+			System.out.println(veiculo);
+		}
 	}
 }
