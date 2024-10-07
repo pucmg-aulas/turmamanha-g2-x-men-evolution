@@ -2,16 +2,30 @@ package entities;
 
 import java.io.Serializable;
 import java.time.LocalDateTime;
-import java.time.temporal.ChronoUnit;
 
 public class Cobrança implements Serializable {
-	
+    private static final long serialVersionUID = 1L;
     private LocalDateTime horarioEntrada;
     private LocalDateTime horarioSaida;
+    private double valorCobrado;
 
-    public Cobrança(LocalDateTime entrada, LocalDateTime saida) {
-        this.horarioEntrada = entrada;
-        this.horarioSaida = saida;
+    public Cobrança(LocalDateTime horarioEntrada) {
+        this.horarioEntrada = horarioEntrada;
+    }
+
+    public void registrarSaida(LocalDateTime horarioSaida) {
+        this.horarioSaida = horarioSaida;
+        calcularValorCobrado();
+    }
+
+    public double getValorCobrado() {
+        return valorCobrado;
+    }
+
+    private void calcularValorCobrado() {
+        
+        long minutosEstacionados = java.time.Duration.between(horarioEntrada, horarioSaida).toMinutes();
+        valorCobrado = minutosEstacionados * 0.5; // R$0,50 por minuto
     }
 
     public LocalDateTime getHorarioEntrada() {
@@ -21,19 +35,4 @@ public class Cobrança implements Serializable {
     public LocalDateTime getHorarioSaida() {
         return horarioSaida;
     }
-
-	public void setHorarioEntrada(LocalDateTime horarioEntrada) {
-		this.horarioEntrada = horarioEntrada;
-	}
-
-	public void setHorarioSaida(LocalDateTime horarioSaida) {
-		this.horarioSaida = horarioSaida;
-	}
-	
-	public double calcularPreco() {
-        long minutos = ChronoUnit.MINUTES.between(horarioEntrada, horarioSaida);
-        double total = (minutos / 15) * 4;
-        return Math.min(total, 50); 
-    }
-	
 }
