@@ -79,9 +79,16 @@ public class SistemaEstacionamento {
             return;
         }
 
-        parque.associarVeiculoAVaga(veiculo);
+        System.out.print("Precisa de uma vaga especial (PCD, Idoso, VIP)? Se sim, digite o tipo, caso contrário, digite 'normal': ");
+        String tipoVaga = scanner.nextLine();
+
+        parque.associarVeiculoAVaga(veiculo, tipoVaga);
         salvarDadosEmArquivo(); // Salvar os dados após a associação
     }
+
+
+    
+
 
     public void liberarVaga(Scanner scanner) {
         if (parques.isEmpty()) {
@@ -102,9 +109,11 @@ public class SistemaEstacionamento {
 
         System.out.print("Digite a placa do veículo que deseja liberar a vaga: ");
         String placaVeiculo = scanner.nextLine();
-        parque.liberarVagaPorPlaca(placaVeiculo);
+        parque.liberarVagaPorPlaca(placaVeiculo);  // Isso agora calcula e exibe o valor cobrado
         salvarDadosEmArquivo(); // Salvar os dados após liberar a vaga
     }
+
+
 
     public void visualizarVeiculosEstacionados(Scanner scanner) {
         listarParques();  // Chama o método para listar parques
