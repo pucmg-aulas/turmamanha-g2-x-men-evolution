@@ -42,7 +42,7 @@ public class SistemaDeEstacionamento {
 		}
 	}
 
-	public void listarVagas() {
+	public static void listarVagas() {
 		Scanner sc = new Scanner(System.in);
 
 		// Listar os parques disponíveis
@@ -91,7 +91,7 @@ public class SistemaDeEstacionamento {
 		}
 	}
 
-	public void cadastrarVaga(String codigoDoParque, Vaga novaVaga, Cliente cliente, Veiculo veiculo, Cobrança cobranca) {
+	public static void cadastrarVaga(String codigoDoParque, Vaga novaVaga, Cliente cliente, Veiculo veiculo, Cobrança cobranca) {
 		try {
 			// Buscar o parque pelo código fornecido
 			ParquesDeEstacionamento parqueSelecionado = null;
@@ -188,7 +188,7 @@ public class SistemaDeEstacionamento {
 		}
 	}
 
-	public void liberarVaga(String codigoDoParque, String codigoDaVaga, Cliente cliente, Cobrança cobranca) {
+	public static void liberarVaga(String codigoDoParque, String codigoDaVaga, Cliente cliente, Cobrança cobranca) {
 		try {
 			// Buscar o parque pelo código fornecido
 			ParquesDeEstacionamento parqueSelecionado = null;
@@ -285,3 +285,5 @@ public class SistemaDeEstacionamento {
 		}
 	}
 }
+
+
