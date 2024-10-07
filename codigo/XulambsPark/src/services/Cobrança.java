@@ -3,13 +3,13 @@ package entities;
 import java.io.Serializable;
 import java.time.LocalDateTime;
 
-public class Cobrança implements Serializable {
+public class Cobranca implements Serializable {
     private static final long serialVersionUID = 1L;
     private LocalDateTime horarioEntrada;
     private LocalDateTime horarioSaida;
     private double valorCobrado;
 
-    public Cobrança(LocalDateTime horarioEntrada) {
+    public Cobranca(LocalDateTime horarioEntrada) {
         this.horarioEntrada = horarioEntrada;
     }
 
