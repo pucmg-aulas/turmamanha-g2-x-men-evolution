@@ -120,7 +120,8 @@ public class Cliente {
 			String resposta = scanner.nextLine();
 
 			if (resposta.equalsIgnoreCase("S")) {
-				Veiculo veiculo = Veiculo.cadastrarVeiculo();
+				Veiculo veiculo = new Veiculo("", "", "", "");
+				veiculo.cadastrarVeiculo();
 				veiculos.add(veiculo);
 				veiculoCount++;
 				System.out.println("Veículo " + veiculo.getPlaca() + " associado com sucesso ao cliente.");
@@ -144,8 +145,37 @@ public class Cliente {
 
 	public static void main(String[] args) {
 		Cliente cliente = new Cliente();
-		cliente.cadastrarCliente();
-		cliente.associarVeiculoAoCliente();
+		boolean continuar = true;
+		while (continuar == true) {
+			System.out.println("1 - Cadastrar cliente");
+			System.out.println("2 - Atualizar cliente");
+			System.out.println("3 - Associar veículo ao cliente");
+			System.out.println("4 - Sair");
+			System.out.print("Escolha uma opção: ");
+
+			try (Scanner scanner = new Scanner(System.in)) {
+				int opcao = scanner.nextInt();
+				switch (opcao) {
+					case 1:
+						cliente.cadastrarCliente();
+						break;
+					case 2:
+						cliente.atualizarCliente();
+						break;
+					case 3:
+						cliente.associarVeiculoAoCliente();
+						break;
+					case 4:
+						continuar = false;
+						break;
+					default:
+						System.out.println("Opção inválida.");
+						break;
+				}
+			} catch (Exception e) {
+				System.err.println("Erro ao ler opção: " + e.getMessage());
+			}
+		}
 	}
 }
 
