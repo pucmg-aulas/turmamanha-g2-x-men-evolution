@@ -1,4 +1,4 @@
-Normal;true;HHS7720;2024-10-10T10:00
+Normal;false
 Normal;false
 Normal;false
 Normal;false
@@ -8,4 +8,4 @@ Idoso;false
 Idoso;false
 PCD;false
 PCD;false
-VIP;true;PZF7720;2024-10-10T10:30
+VIP;false
