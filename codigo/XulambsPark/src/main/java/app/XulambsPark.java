@@ -1,4 +1,4 @@
-package view;
+package app;
 
 import controller.*;
 import model.*;
@@ -17,11 +17,11 @@ public class XulambsPark {
     public static void main(String[] args) {
         // Carregar dados
         try {
-            sistemaEstacionamento.carregarClientes(clientes, "clientes.txt");
-            sistemaEstacionamento.carregarVeiculos(veiculos, "veiculos.txt");
-            sistemaEstacionamento.carregarVagas(sistemaEstacionamento.getParque("Parque A"), veiculos, "vagas_parque_a.txt");
-            sistemaEstacionamento.carregarVagas(sistemaEstacionamento.getParque("Parque B"), veiculos, "vagas_parque_b.txt");
-            sistemaEstacionamento.carregarVagas(sistemaEstacionamento.getParque("Parque C"), veiculos, "vagas_parque_c.txt");
+            sistemaEstacionamento.carregarClientes(clientes, "data/clientes.txt");
+            sistemaEstacionamento.carregarVeiculos(veiculos, "data/veiculos.txt");
+            sistemaEstacionamento.carregarVagas(sistemaEstacionamento.getParque("Parque A"), veiculos, "data/vagas_parque_a.txt");
+            sistemaEstacionamento.carregarVagas(sistemaEstacionamento.getParque("Parque B"), veiculos, "data/vagas_parque_b.txt");
+            sistemaEstacionamento.carregarVagas(sistemaEstacionamento.getParque("Parque C"), veiculos, "data/vagas_parque_c.txt");
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -81,11 +81,11 @@ public class XulambsPark {
         // Salvar dados ao encerrar
         Runtime.getRuntime().addShutdownHook(new Thread(() -> {
             try {
-                sistemaEstacionamento.salvarClientes(clientes, "clientes.txt");
-                sistemaEstacionamento.salvarVeiculos(veiculos, "veiculos.txt");
-                sistemaEstacionamento.salvarVagas(sistemaEstacionamento.getParque("Parque A"), "vagas_parque_a.txt");
-                sistemaEstacionamento.salvarVagas(sistemaEstacionamento.getParque("Parque B"), "vagas_parque_b.txt");
-                sistemaEstacionamento.salvarVagas(sistemaEstacionamento.getParque("Parque C"), "vagas_parque_c.txt");
+                sistemaEstacionamento.salvarClientes(clientes, "data/clientes.txt");
+                sistemaEstacionamento.salvarVeiculos(veiculos, "data/veiculos.txt");
+                sistemaEstacionamento.salvarVagas(sistemaEstacionamento.getParque("Parque A"), "data/vagas_parque_a.txt");
+                sistemaEstacionamento.salvarVagas(sistemaEstacionamento.getParque("Parque B"), "data/vagas_parque_b.txt");
+                sistemaEstacionamento.salvarVagas(sistemaEstacionamento.getParque("Parque C"), "data/vagas_parque_c.txt");
             } catch (IOException e) {
                 e.printStackTrace();
             }

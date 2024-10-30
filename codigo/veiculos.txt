@@ -1,2 +1,0 @@
-HHS7720,Carro,15,Toro,Prata
-HHS7721,Vermelha,Carro,1515,Ferrari
