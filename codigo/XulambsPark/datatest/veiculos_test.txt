@@ -1,0 +1,1 @@
+ABC-1234,12345678900,Carro,Preto,Normal

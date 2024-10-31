@@ -1,4 +1,4 @@
-Miguel Diniz,13
-Flávio Júnior,14
-João Marcelo,15
-Bernardo de Resende,10
+14,Bernardo de Resende
+12,Flávio Júnior
+13,Miguel Diniz
+15,João Marcelo

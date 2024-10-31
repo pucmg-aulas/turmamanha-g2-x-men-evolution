@@ -1,6 +1,4 @@
-PZF7720,Carro,15,Up,Branco
-HHS7720,Carro,15,Toro,Prata
-ANAL1234,Carro,14,Golf,Prata
-HHS7721,Carro,15,Ferrari,Vermelha
-ABC1000,Carro,10,Creta,Preto
-ABC1001,Carro,10,Corolla,Azul
+BCD1234,13,Jetta,Preto,Carro
+HHS7720,15,Onix,Prata,Carro
+ABC1234,14,Creta,Branco,Carro
+CDE1234,12,Up,Branco,Carro

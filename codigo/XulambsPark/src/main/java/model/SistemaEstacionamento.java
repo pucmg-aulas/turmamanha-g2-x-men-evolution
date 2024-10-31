@@ -106,15 +106,18 @@
     
                                 String key = formatter.format(vaga.getEntrada()) + "_" + vaga.getVeiculo().getCpfCliente();
                                 historicoArrecadacao.put(key, valor);
-    
-                                salvarHistorico(vaga.getVeiculo().getCpfCliente(), vaga.getVeiculo().getPlaca(), vaga.getEntrada(), saida, valor);
-                                vaga.liberar();
-                                JOptionPane.showMessageDialog(null, "Vaga " + vaga.getNumero() + " do " + parqueEscolhido + " foi liberada com sucesso. Valor a pagar: R$ " + String.format("%.2f", valor));
-                                return;
+
+                                try {
+                                    salvarHistorico(vaga.getVeiculo().getCpfCliente(), vaga.getVeiculo().getPlaca(), vaga.getEntrada(), saida, valor);
+                                    vaga.liberar();
+                                    JOptionPane.showMessageDialog(null, "Vaga " + vaga.getNumero() + " do " + parqueEscolhido + " foi liberada com sucesso. Valor a pagar: R$ " + String.format("%.2f", valor));
+                                } catch (IOException e) {
+                                    JOptionPane.showMessageDialog(null, "Erro ao salvar histórico: " + e.getMessage());
+                                }return;
                             }
                         }
                         JOptionPane.showMessageDialog(null, "Vaga escolhida não está ocupada ou não existe.");
-                    } catch (NumberFormatException | IOException e) {
+                    } catch (NumberFormatException e) {
                         JOptionPane.showMessageDialog(null, "Entrada inválida. Por favor, insira um número de vaga válido.");
                     }
                 }
@@ -138,47 +141,9 @@
                 }
             }
         }
-    
-        public void visualizarHistorico(String cpfCliente) {
-            try (BufferedReader reader = new BufferedReader(new FileReader("historico.txt"))) {
-                String line;
-                StringBuilder historico = new StringBuilder("Histórico de uso do cliente (CPF: " + cpfCliente + "):\n");
-                while ((line = reader.readLine()) != null) {
-                    String[] parts = line.split(",");
-                    if (parts[0].equals(cpfCliente)) {
-                        historico.append("Placa: ").append(parts[1])
-                                .append(", Entrada: ").append(parts[2])
-                                .append(", Saída: ").append(parts[3])
-                                .append(", Valor: R$ ").append(parts[4]).append("\n");
-                    }
-                }
-                JOptionPane.showMessageDialog(null, historico.toString());
-            } catch (IOException e) {
-                JOptionPane.showMessageDialog(null, "Erro ao carregar o histórico.");
-            }
-        }
 
-        public List<Veiculo> obterVeiculosPorCliente(String cpfCliente) {
-            List<Veiculo> veiculosCliente = new ArrayList<>();
-            for (Veiculo veiculo : veiculos.values()) {
-                if (veiculo.getCpfCliente().equals(cpfCliente)) {
-                    veiculosCliente.add(veiculo);
-                }
-            }
-            return veiculosCliente;
-        }
-        public List<Veiculo> visualizarVeiculosPorCliente(String cpfCliente) {
-            List<Veiculo> veiculosDoCliente = new ArrayList<>();
-            if (cpfCliente != null && !cpfCliente.isEmpty()) {
-                for (Veiculo veiculo : veiculos.values()) {
-                    if (veiculo.getCpfCliente().equals(cpfCliente)) {
-                        veiculosDoCliente.add(veiculo);
-                    }
-                }
-            }
-            return veiculosDoCliente;
-        }
-    
+
+
         public ParqueEstacionamento getParque(String nome) {
             switch (nome) {
                 case "Parque A":
@@ -257,53 +222,95 @@
                 }
             }
         }
-    
+
         public double calcularValorTotalArrecadado() {
-            return historicoArrecadacao.values().stream().mapToDouble(Double::doubleValue).sum();
+            return historico.stream()
+                    .mapToDouble(registro -> Double.parseDouble(registro.split(",")[6]))
+                    .sum();
         }
-    
+
         public double calcularValorArrecadadoMes(String mesAno) {
-            System.out.println("Calculando valor arrecadado para o mês: " + mesAno);
-            return historicoArrecadacao.entrySet().stream()
-                    .filter(entry -> entry.getKey().startsWith(mesAno))
-                    .mapToDouble(Map.Entry::getValue).sum();
+            return historico.stream()
+                    .filter(registro -> {
+                        String data = registro.split(",")[3];
+                        String mesAnoRegistro = data.substring(3, 10); // Assumindo que a data está no formato dd/MM/yyyy
+                        return mesAnoRegistro.equals(mesAno);
+                    })
+                    .mapToDouble(registro -> Double.parseDouble(registro.split(",")[6]))
+                    .sum();
         }
-    
+
         public double calcularValorMedioUtilizacao() {
-            return historicoArrecadacao.isEmpty() ? 0 : historicoArrecadacao.values().stream().mapToDouble(Double::doubleValue).average().orElse(0);
+            return historico.isEmpty() ? 0 : historico.stream()
+                    .mapToDouble(registro -> Double.parseDouble(registro.split(",")[6]))
+                    .average()
+                    .orElse(0);
         }
-    
+
         public String gerarRankingClientesPorArrecadacao(String mesAno) {
-            System.out.println("Gerando ranking para o mês: " + mesAno);
             Map<String, Double> arrecadacaoPorCliente = new HashMap<>();
-    
-            historicoArrecadacao.entrySet().stream()
-                    .filter(entry -> entry.getKey().startsWith(mesAno))
-                    .forEach(entry -> {
-                        String[] parts = entry.getKey().split("_");
-                        String cpfCliente = parts[1];
-                        arrecadacaoPorCliente.put(cpfCliente, arrecadacaoPorCliente.getOrDefault(cpfCliente, 0.0) + entry.getValue());
+
+            historico.stream()
+                    .filter(registro -> {
+                        String data = registro.split(",")[3];
+                        String mesAnoRegistro = data.substring(3, 10); // Assumindo que a data está no formato dd/MM/yyyy
+                        return mesAnoRegistro.equals(mesAno);
+                    })
+                    .forEach(registro -> {
+                        String cpfCliente = registro.split(",")[0];
+                        double valor = Double.parseDouble(registro.split(",")[6]);
+                        arrecadacaoPorCliente.put(cpfCliente, arrecadacaoPorCliente.getOrDefault(cpfCliente, 0.0) + valor);
                     });
-    
+
             return arrecadacaoPorCliente.entrySet().stream()
                     .sorted(Map.Entry.comparingByValue(Comparator.reverseOrder()))
                     .map(entry -> "CPF: " + entry.getKey() + " - Total: R$ " + String.format("%.2f", entry.getValue()))
                     .collect(Collectors.joining("\n"));
         }
-    
-        private void salvarHistorico(String cpfCliente, String placa, LocalDateTime entrada, LocalDateTime saida, double valor) throws IOException {
-            try (BufferedWriter writer = new BufferedWriter(new FileWriter("historico.txt", true))) {
-                writer.write(cpfCliente + "," + placa + "," + entrada.format(formatter) + "," + saida.format(formatter) + "," + String.format("%.2f", valor) + "\n");
+
+
+        public void salvarHistorico(String cpfCliente, String placaVeiculo, LocalDateTime entrada, LocalDateTime saida, double valor) throws IOException {
+            Veiculo veiculo = veiculos.get(placaVeiculo);
+            if (veiculo == null) {
+                throw new IllegalArgumentException("Veículo não encontrado para a placa: " + placaVeiculo);
+            }
+
+            String modeloVeiculo = veiculo.getModelo();
+            String dataEntrada = entrada.format(formatter);
+            String dataSaida = saida.format(formatter);
+            String duracao = String.valueOf(Duration.between(entrada, saida).toMinutes());
+
+            String novoRegistro = String.join(",", cpfCliente, modeloVeiculo, placaVeiculo, dataEntrada, dataSaida, duracao, String.valueOf(valor));
+            historico.add(novoRegistro);
+
+            try (BufferedWriter writer = new BufferedWriter(new FileWriter("data/historico.txt", true))) {
+                writer.write(novoRegistro);
+                writer.newLine();
             }
         }
 
-        public void carregarHistorico(String caminhoArquivo) throws IOException {
-            try (BufferedReader br = new BufferedReader(new FileReader(caminhoArquivo))) {
+        public void carregarHistorico(String filePath) throws IOException {
+            try (BufferedReader reader = new BufferedReader(new FileReader(filePath))) {
                 String linha;
-                while ((linha = br.readLine()) != null) {
-                    historico.add(linha);
+                while ((linha = reader.readLine()) != null) {
+                    String[] dados = linha.split(",");
+                    String cpfCliente = dados[0];
+                    String modeloVeiculo = dados[1];
+                    String placaVeiculo = dados[2];
+                    String dataEntrada = dados[3];
+                    String dataSaida = dados[4];
+                    String duracao = dados[5];
+                    String valor = dados[6];
+
+                    // Adicionar ao histórico
+                    historico.add(String.join(",", cpfCliente, modeloVeiculo, placaVeiculo, dataEntrada, dataSaida, duracao, valor));
                 }
             }
+        }
+
+        public void adicionarRegistroHistorico(String cpfCliente, Veiculo veiculo, String dataEntrada, String dataSaida, String duracao, String valor) {
+            String registro = String.join(",", cpfCliente, veiculo.getModelo(), veiculo.getPlaca(), dataEntrada, dataSaida, duracao, valor);
+            historico.add(registro);
         }
 
         public List<String> obterHistoricoPorCliente(String cpfCliente) {
@@ -316,12 +323,6 @@
             return historicoCliente;
         }
 
-        public void visualizarHistorico() {
-            for (String registro : historico) {
-                System.out.println(registro);
-            }
-        }
-    
         private boolean isVeiculoEstacionado(Veiculo veiculo) {
             return parqueA.isVeiculoEstacionado(veiculo) || parqueB.isVeiculoEstacionado(veiculo) || parqueC.isVeiculoEstacionado(veiculo);
         }

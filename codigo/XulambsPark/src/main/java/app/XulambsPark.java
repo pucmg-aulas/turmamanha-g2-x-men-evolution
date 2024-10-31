@@ -8,6 +8,7 @@ import view.CadastrarClienteView;
 import view.CadastrarVeiculoView;
 import view.VisualizarHistoricoView;
 
+
 import javax.swing.*;
 import java.awt.*;
 import java.io.IOException;
@@ -18,6 +19,7 @@ public class XulambsPark {
     private static Map<String, Veiculo> veiculos = new HashMap<>();
     private static Map<String, Cliente> clientes = new HashMap<>();
     private static SistemaEstacionamento sistemaEstacionamento = new SistemaEstacionamento(veiculos);
+
 
     public static void main(String[] args) {
         // Carregar dados
@@ -36,7 +38,7 @@ public class XulambsPark {
         JFrame frame = new JFrame("XulambsPark - Sistema de Estacionamento");
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.setSize(400, 800);
-        frame.setLayout(new GridLayout(9, 1));
+        frame.setLayout(new GridLayout(8, 1));
 
         ImageIcon logoIcon = new ImageIcon(XulambsPark.class.getClassLoader().getResource("logo.png"));
         Image logoImage = logoIcon.getImage().getScaledInstance(300, 100, Image.SCALE_SMOOTH);
@@ -49,7 +51,7 @@ public class XulambsPark {
         JButton btnEstacionarVeiculo = new JButton("Estacionar Veículo");
         JButton btnLiberarVaga = new JButton("Liberar Vaga");
         JButton btnVisualizarVeiculosEstacionados = new JButton("Visualizar Veículos Estacionados");
-        JButton btnVisualizarVeiculosPorCliente = new JButton("Visualizar Veículos por Cliente");
+
         JButton btnAcessarComoAdmin = new JButton("Acessar como Administrador");
         JButton btnVisualizarHistoricoPorCliente = new JButton("Visualizar Histórico");
 
@@ -59,7 +61,6 @@ public class XulambsPark {
         EstacionarVeiculoController estacionarVeiculoController = new EstacionarVeiculoController(clientes, veiculos, sistemaEstacionamento);
         LiberarVagaController liberarVagaController = new LiberarVagaController(sistemaEstacionamento);
         VisualizarVeiculosEstacionadosController visualizarVeiculosEstacionadosController = new VisualizarVeiculosEstacionadosController(sistemaEstacionamento);
-        VisualizarVeiculosPorClienteController visualizarVeiculosPorClienteController = new VisualizarVeiculosPorClienteController(sistemaEstacionamento);
         VisualizarHistoricoController visualizarHistoricoController = new VisualizarHistoricoController(sistemaEstacionamento);
         AcessarComoAdminController acessarComoAdminController = new AcessarComoAdminController(sistemaEstacionamento);
 
@@ -83,12 +84,6 @@ public class XulambsPark {
         btnEstacionarVeiculo.addActionListener(e -> estacionarVeiculoController.estacionarVeiculo());
         btnLiberarVaga.addActionListener(e -> liberarVagaController.liberarVaga());
         btnVisualizarVeiculosEstacionados.addActionListener(e -> visualizarVeiculosEstacionadosController.visualizarVeiculosEstacionados());
-        btnVisualizarVeiculosPorCliente.addActionListener(e -> {
-            String cpfCliente = JOptionPane.showInputDialog("Digite o CPF do cliente:");
-            if (cpfCliente != null && !cpfCliente.trim().isEmpty()) {
-                visualizarVeiculosPorClienteController.visualizarVeiculosPorCliente(cpfCliente);
-            }
-        });
         btnAcessarComoAdmin.addActionListener(e -> acessarComoAdminController.acessarComoAdministrador());
         btnVisualizarHistoricoPorCliente.addActionListener(e -> {
             String cpfCliente = JOptionPane.showInputDialog("Digite o CPF do cliente:");
@@ -103,7 +98,7 @@ public class XulambsPark {
         frame.add(btnEstacionarVeiculo);
         frame.add(btnLiberarVaga);
         frame.add(btnVisualizarVeiculosEstacionados);
-        frame.add(btnVisualizarVeiculosPorCliente);
+
         frame.add(btnAcessarComoAdmin);
         frame.add(btnVisualizarHistoricoPorCliente);
         frame.setVisible(true);

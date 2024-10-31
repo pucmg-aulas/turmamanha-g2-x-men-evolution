@@ -14,10 +14,6 @@ public class VisualizarHistoricoView {
         this.sistemaEstacionamento = sistemaEstacionamento;
     }
 
-    public static String solicitarCpfCliente() {
-        return JOptionPane.showInputDialog("Digite o CPF do cliente:");
-    }
-
     public void mostrarHistorico(String cpfCliente) {
         List<String> historico = sistemaEstacionamento.obterHistoricoPorCliente(cpfCliente);
         JFrame frame = new JFrame("Histórico do Cliente");
