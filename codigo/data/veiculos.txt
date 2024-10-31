@@ -1,3 +1,6 @@
 PZF7720,Carro,15,Up,Branco
 HHS7720,Carro,15,Toro,Prata
-HHS7721,Carro,1515,Ferrari,Vermelha
+ANAL1234,Carro,14,Golf,Prata
+HHS7721,Carro,15,Ferrari,Vermelha
+ABC1000,Carro,10,Creta,Preto
+ABC1001,Carro,10,Corolla,Azul

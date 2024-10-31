@@ -1,9 +1,6 @@
 package controller;
 
 import model.Cliente;
-import view.CadastrarClienteView;
-
-import javax.swing.*;
 import java.util.Map;
 
 public class CadastrarClienteController {
@@ -13,17 +10,8 @@ public class CadastrarClienteController {
         this.clientes = clientes;
     }
 
-    public void cadastrarCliente() {
-        String[] dados = CadastrarClienteView.mostrarFormulario();
-        if (dados != null) {
-            String nome = dados[0];
-            String cpf = dados[1];
-            if (!nome.isEmpty() && !cpf.isEmpty()) {
-                clientes.put(cpf, new Cliente(nome, cpf));
-                JOptionPane.showMessageDialog(null, "Cliente cadastrado com sucesso!");
-            } else {
-                JOptionPane.showMessageDialog(null, "Todos os campos devem ser preenchidos.");
-            }
-        }
+    public void cadastrarCliente(String cpf, String nome) {
+        Cliente cliente = new Cliente(cpf, nome);
+        clientes.put(cpf, cliente);
     }
 }

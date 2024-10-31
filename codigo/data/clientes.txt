@@ -1,2 +1,4 @@
-João,15
-Bernardo,10
+Miguel Diniz,13
+Flávio Júnior,14
+João Marcelo,15
+Bernardo de Resende,10

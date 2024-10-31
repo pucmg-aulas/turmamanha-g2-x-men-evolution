@@ -10,10 +10,7 @@ public class VisualizarHistoricoController {
         this.sistemaEstacionamento = sistemaEstacionamento;
     }
 
-    public void visualizarHistorico() {
-        String cpfCliente = VisualizarHistoricoView.solicitarCpfCliente();
-        if (cpfCliente != null && !cpfCliente.isEmpty()) {
-            sistemaEstacionamento.visualizarHistorico(cpfCliente);
-        }
+    public void visualizarHistoricoPorCliente(String cpfCliente) {
+        new VisualizarHistoricoView(sistemaEstacionamento).mostrarHistorico(cpfCliente);
     }
 }

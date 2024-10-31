@@ -7,13 +7,19 @@
     import java.time.format.DateTimeFormatter;
     import java.util.*;
     import java.util.stream.Collectors;
-    
+
     public class SistemaEstacionamento {
         private ParqueEstacionamento parqueA = new ParqueEstacionamento("Parque A");
         private ParqueEstacionamento parqueB = new ParqueEstacionamento("Parque B");
         private ParqueEstacionamento parqueC = new ParqueEstacionamento("Parque C");
         private Map<String, Double> historicoArrecadacao = new HashMap<>();
+        private List<String> historico = new ArrayList<>();
+        private Map<String, Veiculo> veiculos;
         private DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm");
+
+        public SistemaEstacionamento(Map<String, Veiculo> veiculos) {
+            this.veiculos = veiculos;
+        }
     
         public void estacionarVeiculo(Map<String, Cliente> clientes, Map<String, Veiculo> veiculos) {
             String placa = JOptionPane.showInputDialog("Digite a placa do veículo:");
@@ -151,26 +157,26 @@
                 JOptionPane.showMessageDialog(null, "Erro ao carregar o histórico.");
             }
         }
-    
-        public void visualizarVeiculosPorCliente(Map<String, Veiculo> veiculos) {
-            String cpfCliente = JOptionPane.showInputDialog("Digite o CPF do cliente:");
+
+        public List<Veiculo> obterVeiculosPorCliente(String cpfCliente) {
+            List<Veiculo> veiculosCliente = new ArrayList<>();
+            for (Veiculo veiculo : veiculos.values()) {
+                if (veiculo.getCpfCliente().equals(cpfCliente)) {
+                    veiculosCliente.add(veiculo);
+                }
+            }
+            return veiculosCliente;
+        }
+        public List<Veiculo> visualizarVeiculosPorCliente(String cpfCliente) {
+            List<Veiculo> veiculosDoCliente = new ArrayList<>();
             if (cpfCliente != null && !cpfCliente.isEmpty()) {
-                StringBuilder veiculosDoCliente = new StringBuilder("Veículos do cliente (CPF: " + cpfCliente + "):\n");
-                boolean encontrouVeiculo = false;
                 for (Veiculo veiculo : veiculos.values()) {
                     if (veiculo.getCpfCliente().equals(cpfCliente)) {
-                        veiculosDoCliente.append("Placa: ").append(veiculo.getPlaca())
-                                .append(", Modelo: ").append(veiculo.getModelo())
-                                .append(", Cor: ").append(veiculo.getCor())
-                                .append(", Tipo: ").append(veiculo.getTipo()).append("\n");
-                        encontrouVeiculo = true;
+                        veiculosDoCliente.add(veiculo);
                     }
                 }
-                if (!encontrouVeiculo) {
-                    veiculosDoCliente.append("Nenhum veículo encontrado para este cliente.");
-                }
-                JOptionPane.showMessageDialog(null, veiculosDoCliente.toString());
             }
+            return veiculosDoCliente;
         }
     
         public ParqueEstacionamento getParque(String nome) {
@@ -193,7 +199,7 @@
                 }
             }
         }
-    
+
         public void carregarClientes(Map<String, Cliente> clientes, String filePath) throws IOException {
             try (BufferedReader reader = new BufferedReader(new FileReader(filePath))) {
                 String line;
@@ -203,25 +209,23 @@
                 }
             }
         }
-    
+
         public void salvarVeiculos(Map<String, Veiculo> veiculos, String filePath) throws IOException {
-            try (BufferedWriter writer = new BufferedWriter(new FileWriter(filePath))) {
+            try (BufferedWriter bw = new BufferedWriter(new FileWriter(filePath))) {
                 for (Veiculo veiculo : veiculos.values()) {
-                    writer.write(veiculo.getPlaca() + "," + veiculo.getCpfCliente() + "," + veiculo.getModelo() + "," + veiculo.getCor() + "," + veiculo.getTipo() + "\n");
+                    bw.write(veiculo.getPlaca() + "," + veiculo.getCpfCliente() + "," + veiculo.getModelo() + "," + veiculo.getCor() + "," + veiculo.getTipo());
+                    bw.newLine();
                 }
             }
         }
-    
+
         public void carregarVeiculos(Map<String, Veiculo> veiculos, String filePath) throws IOException {
-            try (BufferedReader reader = new BufferedReader(new FileReader(filePath))) {
+            try (BufferedReader br = new BufferedReader(new FileReader(filePath))) {
                 String line;
-                while ((line = reader.readLine()) != null) {
-                    String[] parts = line.split(",");
-                    if (parts.length == 5) {
-                        veiculos.put(parts[0], new Veiculo(parts[0], parts[1], parts[2], parts[3], parts[4]));
-                    } else {
-                        System.err.println("Linha inválida: " + line);
-                    }
+                while ((line = br.readLine()) != null) {
+                    String[] data = line.split(",");
+                    Veiculo veiculo = new Veiculo(data[0], data[1], data[2], data[3], data[4]);
+                    veiculos.put(data[0], veiculo);
                 }
             }
         }
@@ -290,6 +294,31 @@
         private void salvarHistorico(String cpfCliente, String placa, LocalDateTime entrada, LocalDateTime saida, double valor) throws IOException {
             try (BufferedWriter writer = new BufferedWriter(new FileWriter("historico.txt", true))) {
                 writer.write(cpfCliente + "," + placa + "," + entrada.format(formatter) + "," + saida.format(formatter) + "," + String.format("%.2f", valor) + "\n");
+            }
+        }
+
+        public void carregarHistorico(String caminhoArquivo) throws IOException {
+            try (BufferedReader br = new BufferedReader(new FileReader(caminhoArquivo))) {
+                String linha;
+                while ((linha = br.readLine()) != null) {
+                    historico.add(linha);
+                }
+            }
+        }
+
+        public List<String> obterHistoricoPorCliente(String cpfCliente) {
+            List<String> historicoCliente = new ArrayList<>();
+            for (String registro : historico) {
+                if (registro.startsWith(cpfCliente + ",")) {
+                    historicoCliente.add(registro);
+                }
+            }
+            return historicoCliente;
+        }
+
+        public void visualizarHistorico() {
+            for (String registro : historico) {
+                System.out.println(registro);
             }
         }
     
