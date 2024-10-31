@@ -24,7 +24,7 @@ public class SistemaEstacionamentoTest {
 
     @BeforeEach
     public void setUp() {
-        sistemaEstacionamento = new SistemaEstacionamento();
+        sistemaEstacionamento = new SistemaEstacionamento(new HashMap<>());
         clientes = new HashMap<>();
         veiculos = new HashMap<>();
         parque = new ParqueEstacionamento("Parque A");
