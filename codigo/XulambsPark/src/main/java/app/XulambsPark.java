@@ -98,7 +98,6 @@ public class XulambsPark {
         frame.add(btnEstacionarVeiculo);
         frame.add(btnLiberarVaga);
         frame.add(btnVisualizarVeiculosEstacionados);
-
         frame.add(btnAcessarComoAdmin);
         frame.add(btnVisualizarHistoricoPorCliente);
         frame.setVisible(true);
