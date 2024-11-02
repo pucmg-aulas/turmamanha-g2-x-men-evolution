@@ -1,20 +1,21 @@
-BCD1234,Preto,Carro,13,Jetta
-IKL1241,Branco,Carro,08,Fit
-YTR1246,Preto,Moto,18,Biz
-ZXC1243,Vermelho,Carro,15,Argo
-CDE1234,Branco,Carro,12,Up
-QWX1235,Branco,Carro,02,Polo TSI
-OLP1242,Preto,Carro,09,FastBack
-QWX1236,Preto,Carro,03,Corolla
-UIU1245,Prata,Moto,17,CG150
-RSX1237,Azul,Carro,04,HRV
-YHN1239,Preto,Carro,06,Tracker
-MCD123,Azul,Carro,11,Chiron
-QWE1247,Branco,Moto,19,Fan
-HHS7720,Preto,Carro,01,Santa Fé
-ABC1234,Branco,Carro,14,Creta
-TGB1238,Prata,Carro,05,Compass
-UJM1240,Preto,Carro,07,HB20
-HHS7722,Prata,Carro,10,Onix
-ERT1244,Preto,Carro,16,Uno
-ASD1248,Rosa,Moto,20,Pop
+BCD1234,Carro,13,Jetta,Preto
+IKL1241,Carro,08,Fit,Branco
+YTR1246,Moto,18,Biz,Preto
+ZXC1243,Carro,15,Argo,Vermelho
+CDE1234,Carro,12,Up,Branco
+QWX1235,Carro,02,Polo TSI,Branco
+OLP1242,Carro,09,FastBack,Preto
+QWX1236,Carro,03,Corolla,Preto
+UIU1245,Moto,17,CG150,Prata
+RSX1237,Carro,04,HRV,Azul
+YHN1239,Carro,06,Tracker,Preto
+MCD123,Carro,11,Chiron,Azul
+QWE1247,Moto,19,Fan,Branco
+HHS7720,Carro,01,Santa Fé,Preto
+ABC1234,Carro,14,Creta,Branco
+TGB1238,Carro,05,Compass,Prata
+UJM1240,Carro,07,HB20,Preto
+HHS7722,Carro,10,Onix,Prata
+ERT1244,Carro,16,Uno,Preto
+ASD1248,Moto,20,Pop,Rosa
+RSW123,Prata,Carro,21,Logan

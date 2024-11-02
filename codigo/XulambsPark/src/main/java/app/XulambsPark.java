@@ -7,8 +7,6 @@ import model.Veiculo;
 import view.CadastrarClienteView;
 import view.CadastrarVeiculoView;
 import view.VisualizarHistoricoView;
-
-
 import javax.swing.*;
 import java.awt.*;
 import java.io.IOException;
@@ -54,7 +52,6 @@ public class XulambsPark {
         JButton btnEstacionarVeiculo = new JButton("Estacionar Veículo");
         JButton btnLiberarVaga = new JButton("Liberar Vaga");
         JButton btnVisualizarVeiculosEstacionados = new JButton("Visualizar Veículos Estacionados");
-
         JButton btnAcessarComoAdmin = new JButton("Acessar como Administrador");
         JButton btnVisualizarHistoricoPorCliente = new JButton("Visualizar Histórico");
 
