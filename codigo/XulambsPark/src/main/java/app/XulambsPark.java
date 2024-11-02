@@ -12,6 +12,9 @@ import view.VisualizarHistoricoView;
 import javax.swing.*;
 import java.awt.*;
 import java.io.IOException;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -89,6 +92,27 @@ public class XulambsPark {
             String cpfCliente = JOptionPane.showInputDialog("Digite o CPF do cliente:");
             if (cpfCliente != null && !cpfCliente.trim().isEmpty()) {
                 new VisualizarHistoricoView(sistemaEstacionamento).mostrarHistorico(cpfCliente);
+            }
+        });
+
+        btnVisualizarHistoricoPorCliente.addActionListener(e -> {
+            String cpfCliente = JOptionPane.showInputDialog("Digite o CPF do cliente:");
+            if (cpfCliente != null && !cpfCliente.trim().isEmpty()) {
+                int option = JOptionPane.showConfirmDialog(null, "Deseja filtrar por data?", "Filtrar Histórico", JOptionPane.YES_NO_OPTION);
+                if (option == JOptionPane.YES_OPTION) {
+                    SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
+                    try {
+                        String dataInicioStr = JOptionPane.showInputDialog("Digite a data de início (dd/MM/yyyy):");
+                        String dataFimStr = JOptionPane.showInputDialog("Digite a data de fim (dd/MM/yyyy):");
+                        Date dataInicio = dateFormat.parse(dataInicioStr);
+                        Date dataFim = dateFormat.parse(dataFimStr);
+                        new VisualizarHistoricoView(sistemaEstacionamento).mostrarHistorico(cpfCliente, dataInicio, dataFim);
+                    } catch (ParseException ex) {
+                        JOptionPane.showMessageDialog(null, "Formato de data inválido.");
+                    }
+                } else {
+                    new VisualizarHistoricoView(sistemaEstacionamento).mostrarHistorico(cpfCliente);
+                }
             }
         });
 
