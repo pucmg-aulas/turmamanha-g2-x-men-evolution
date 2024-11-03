@@ -52,8 +52,9 @@ public class XulambsPark {
         JButton btnEstacionarVeiculo = new JButton("Estacionar Veículo");
         JButton btnLiberarVaga = new JButton("Liberar Vaga");
         JButton btnVisualizarVeiculosEstacionados = new JButton("Visualizar Veículos Estacionados");
-        JButton btnAcessarComoAdmin = new JButton("Acessar como Administrador");
         JButton btnVisualizarHistoricoPorCliente = new JButton("Visualizar Histórico");
+        JButton btnAcessarComoAdmin = new JButton("Acessar como Administrador");
+
 
         // Instanciar Controladores
         CadastrarClienteController cadastrarClienteController = new CadastrarClienteController(clientes);
@@ -119,8 +120,9 @@ public class XulambsPark {
         frame.add(btnEstacionarVeiculo);
         frame.add(btnLiberarVaga);
         frame.add(btnVisualizarVeiculosEstacionados);
-        frame.add(btnAcessarComoAdmin);
         frame.add(btnVisualizarHistoricoPorCliente);
+        frame.add(btnAcessarComoAdmin);
+
         frame.setVisible(true);
 
         // Salvar dados ao encerrar

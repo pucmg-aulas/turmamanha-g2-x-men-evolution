@@ -275,12 +275,14 @@
                 throw new IllegalArgumentException("Veículo não encontrado para a placa: " + placaVeiculo);
             }
 
-            String modeloVeiculo = veiculo.getModelo();
+            String modeloVeiculo = veiculo.getModelo();  // Apenas o modelo, sem categoria
             String dataEntrada = entrada.format(formatter);
             String dataSaida = saida.format(formatter);
             String duracao = String.valueOf(Duration.between(entrada, saida).toMinutes());
 
+            // Formatação final com CPF no início e sem dados extras
             String novoRegistro = String.join(",", cpfCliente, modeloVeiculo, placaVeiculo, dataEntrada, dataSaida, duracao, String.valueOf(valor));
+
             historico.add(novoRegistro);
 
             try (BufferedWriter writer = new BufferedWriter(new FileWriter("data/historico.txt", true))) {
@@ -302,26 +304,27 @@
                     String duracao = dados[5];
                     String valor = dados[6];
 
-                    // Adicionar ao histórico
+                    // Adicionar ao histórico sem a cor do veículo
                     historico.add(String.join(",", cpfCliente, modeloVeiculo, placaVeiculo, dataEntrada, dataSaida, duracao, valor));
                 }
             }
         }
 
-        public void adicionarRegistroHistorico(String cpfCliente, Veiculo veiculo, String dataEntrada, String dataSaida, String duracao, String valor) {
-            String registro = String.join(",", cpfCliente, veiculo.getModelo(), veiculo.getPlaca(), dataEntrada, dataSaida, duracao, valor);
-            historico.add(registro);
-        }
-
         public List<String> obterHistoricoPorCliente(String cpfCliente) {
             List<String> historicoCliente = new ArrayList<>();
             for (String registro : historico) {
-                if (registro.startsWith(cpfCliente + ",")) {
-                    historicoCliente.add(registro);
+                String[] dados = registro.split(",");
+
+                // Verifica se o CPF corresponde ao cliente desejado
+                if (dados[0].equals(cpfCliente)) {
+                    // Formata o registro para exibir apenas CPF, Modelo, Placa, Data Entrada, Data Saída, Duração e Valor
+                    String registroFormatado = String.join(",", dados[0], dados[1], dados[2], dados[3], dados[4], dados[5], dados[6]);
+                    historicoCliente.add(registroFormatado);
                 }
             }
             return historicoCliente;
         }
+
 
         private boolean isVeiculoEstacionado(Veiculo veiculo) {
             return parqueA.isVeiculoEstacionado(veiculo) || parqueB.isVeiculoEstacionado(veiculo) || parqueC.isVeiculoEstacionado(veiculo);
