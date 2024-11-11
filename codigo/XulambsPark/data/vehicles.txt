@@ -1,0 +1,6 @@
+Placa: a
+Model: b
+Color: c
+Owner: Jorge
+CPF: 121412
+---

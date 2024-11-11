@@ -1,9 +1,13 @@
 package model;
 
-public class VagaPCD extends Vaga {
-    public static double valor = 0.87;
+public class VagaPCD implements ITipoVaga {
+    @Override
+    public String getTipo() {
+        return "PCD";
+    }
 
-    public VagaPCD(int numero) {
-        super(numero);
+    @Override
+    public double calcularTarifa(double tarifaBase) {
+        return tarifaBase * 0.87; // 13% de desconto
     }
 }

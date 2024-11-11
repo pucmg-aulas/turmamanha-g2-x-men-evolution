@@ -1,9 +1,13 @@
 package model;
 
-public class VagaIdoso extends Vaga {
-    public static double valor = 0.85;
+public class VagaIdoso implements ITipoVaga {
+    @Override
+    public String getTipo() {
+        return "Idoso";
+    }
 
-    public VagaIdoso(int numero) {
-        super(numero);
+    @Override
+    public double calcularTarifa(double tarifaBase) {
+        return tarifaBase * 0.85; // 15% de desconto
     }
 }

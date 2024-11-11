@@ -1,9 +1,13 @@
 package model;
 
-public class VagaVIP extends Vaga {
-    public static double valor = 1.2;
+public class VagaVIP implements ITipoVaga {
+    @Override
+    public String getTipo() {
+        return "VIP";
+    }
 
-    public VagaVIP(int numero) {
-        super(numero);
+    @Override
+    public double calcularTarifa(double tarifaBase) {
+        return tarifaBase * 1.20; // 20% mais caro
     }
 }
