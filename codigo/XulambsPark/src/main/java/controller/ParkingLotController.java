@@ -1,26 +1,80 @@
-// src/main/java/controller/ParkingLotController.java
 package controller;
 
 import DAO.ParkingLotDAO;
-import model.ITipoVaga;
-import model.ParkingLot;
-import model.ParkingSpot;
-import model.Vehicle;
+import javafx.scene.control.Alert;
+import javafx.scene.control.Button;
+import javafx.scene.control.ButtonType;
+import model.*;
+import view.ClientView;
+import view.VehicleView;
+
+import java.time.LocalDateTime;
+import java.time.temporal.ChronoUnit;
 import java.util.LinkedHashMap;
 import java.util.Map;
+import java.util.Optional;
 import java.util.Set;
 
 public class ParkingLotController {
     private Map<String, ParkingLot> parkingLots;
     private ParkingLotDAO parkingLotDAO;
+    private ClientController clientController;
 
     public ParkingLotController() {
         this.parkingLotDAO = new ParkingLotDAO();
         this.parkingLotDAO.loadFromFile();
         this.parkingLots = new LinkedHashMap<>(this.parkingLotDAO.findAll());
+        this.clientController = new ClientController();
     }
 
-    public void addParkingLot(String name, int numberOfSpots, ITipoVaga tipoVaga) {
+    public void handleButtonAction(ParkingSpot spot, Button button) {
+        if (!spot.isOccupied()) {
+            Vehicle vehicle = new VehicleView().show();
+            if (vehicle != null) {
+                Client client = new ClientView(clientController).show(vehicle);
+                if (client != null) {
+                    client.addVehicle(vehicle);
+                    if (parkVehicle(spot.getId(), vehicle)) {
+                        spot.occupy(vehicle);
+                        button.setStyle("-fx-background-color: red");
+                    } else {
+                        showAlert("Failed to park vehicle.");
+                    }
+                }
+            }
+        } else {
+            boolean confirm = showConfirmDialog("Vacate this spot?");
+            if (confirm) {
+                double valor = calcularTarifa(spot.getId());
+                showAlert("Total amount due: " + valor);
+                if (vacateSpot(spot.getId())) {
+                    spot.vacate();
+                    button.setStyle("-fx-background-color: " + spot.getType().getColor().toString());
+                } else {
+                    showAlert("Failed to vacate spot.");
+                }
+            }
+        }
+    }
+
+    private boolean showConfirmDialog(String message) {
+        Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
+        alert.setTitle("Confirmation");
+        alert.setHeaderText(null);
+        alert.setContentText(message);
+        Optional<ButtonType> result = alert.showAndWait();
+        return result.isPresent() && result.get() == ButtonType.OK;
+    }
+
+    private void showAlert(String message) {
+        Alert alert = new Alert(Alert.AlertType.INFORMATION);
+        alert.setTitle("Information");
+        alert.setHeaderText(null);
+        alert.setContentText(message);
+        alert.showAndWait();
+    }
+
+    public void addParkingLot(String name, int numberOfSpots, SpotType tipoVaga) {
         ParkingLot parkingLot = new ParkingLot(name, numberOfSpots, tipoVaga);
         parkingLots.put(name, parkingLot);
         parkingLotDAO.save(parkingLot);
@@ -39,23 +93,48 @@ public class ParkingLotController {
         return parkingLot != null ? parkingLot.getSpot(spotId) : null;
     }
 
-    public boolean parkVehicle(String parkingLotName, String spotId, Vehicle vehicle) {
-        ParkingSpot spot = getSpot(parkingLotName, spotId);
-        if (spot != null && !spot.isOccupied()) {
-            spot.occupy(vehicle);
-            parkingLotDAO.save(parkingLots.get(parkingLotName));
-            return true;
+    public boolean parkVehicle(String spotId, Vehicle vehicle) {
+        for (ParkingLot parkingLot : parkingLots.values()) {
+            ParkingSpot spot = parkingLot.getSpot(spotId);
+            if (spot != null && !spot.isOccupied()) {
+                spot.occupy(vehicle);
+                parkingLotDAO.save(parkingLot);
+                return true;
+            }
         }
         return false;
     }
 
-    public boolean vacateSpot(String parkingLotName, String spotId) {
-        ParkingSpot spot = getSpot(parkingLotName, spotId);
-        if (spot != null && spot.isOccupied()) {
-            spot.vacate();
-            parkingLotDAO.save(parkingLots.get(parkingLotName));
-            return true;
+    public boolean vacateSpot(String spotId) {
+        for (ParkingLot parkingLot : parkingLots.values()) {
+            ParkingSpot spot = parkingLot.getSpot(spotId);
+            if (spot != null && spot.isOccupied()) {
+                spot.vacate();
+                parkingLotDAO.save(parkingLot);
+                return true;
+            }
         }
         return false;
+    }
+
+    public double calcularTarifa(String spotId) {
+        for (ParkingLot parkingLot : parkingLots.values()) {
+            ParkingSpot spot = parkingLot.getSpot(spotId);
+            if (spot != null && spot.isOccupied()) {
+                long minutes = ChronoUnit.MINUTES.between(spot.getStartTime(), LocalDateTime.now());
+                double tarifaBase = 4.0 * Math.ceil(minutes / 15.0);
+                tarifaBase = Math.min(tarifaBase, 50.0);
+                return tarifaBase; // Ajuste conforme necessário
+            }
+        }
+        return 0;
+    }
+
+    public Client getClientByName(String name) {
+        return clientController.getClientByName(name);
+    }
+
+    public void registerClient(String name, String cpf, boolean isAnonymous) {
+        clientController.registerClient(name, cpf, isAnonymous);
     }
 }

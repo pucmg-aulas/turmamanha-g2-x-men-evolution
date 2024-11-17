@@ -1,84 +1,74 @@
 package view;
 
 import controller.ClientController;
+import javafx.scene.control.Alert;
+import javafx.scene.control.ButtonType;
+import javafx.scene.control.TextInputDialog;
 import model.Client;
+import model.Vehicle;
 
-import javax.swing.*;
-import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
+import java.util.Optional;
 
-public class ClientView extends JFrame {
-    private ClientController controller;
-    private JTextField nameField;
-    private JTextField cpfField;
-    private JCheckBox anonymousCheckBox;
+public class ClientView {
+    private ClientController clientController;
 
-    public ClientView(ClientController controller) {
-        this.controller = controller;
+    public ClientView(ClientController clientController) {
+        this.clientController = clientController;
+    }
 
-        setTitle("Cadastrar Cliente");
-        setSize(400, 300);
-        setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-        setLocationRelativeTo(null);
-
-        JPanel panel = new JPanel(new GridBagLayout());
-        panel.setBorder(BorderFactory.createEmptyBorder(20, 20, 20, 20));
-        GridBagConstraints gbc = new GridBagConstraints();
-        gbc.insets = new Insets(10, 10, 10, 10);
-        gbc.fill = GridBagConstraints.HORIZONTAL;
-
-        JLabel nameLabel = new JLabel("Nome:");
-        nameLabel.setFont(new Font("Arial", Font.PLAIN, 14));
-        gbc.gridx = 0;
-        gbc.gridy = 0;
-        panel.add(nameLabel, gbc);
-
-        nameField = new JTextField(20);
-        nameField.setFont(new Font("Arial", Font.PLAIN, 14));
-        gbc.gridx = 1;
-        gbc.gridy = 0;
-        panel.add(nameField, gbc);
-
-        JLabel cpfLabel = new JLabel("CPF:");
-        cpfLabel.setFont(new Font("Arial", Font.PLAIN, 14));
-        gbc.gridx = 0;
-        gbc.gridy = 1;
-        panel.add(cpfLabel, gbc);
-
-        cpfField = new JTextField(20);
-        cpfField.setFont(new Font("Arial", Font.PLAIN, 14));
-        gbc.gridx = 1;
-        gbc.gridy = 1;
-        panel.add(cpfField, gbc);
-
-        anonymousCheckBox = new JCheckBox("Anonimo");
-        anonymousCheckBox.setFont(new Font("Arial", Font.PLAIN, 14));
-        gbc.gridx = 0;
-        gbc.gridy = 2;
-        gbc.gridwidth = 2;
-        panel.add(anonymousCheckBox, gbc);
-
-        JButton registerButton = new JButton("Cadastrar");
-        registerButton.setFont(new Font("Arial", Font.PLAIN, 14));
-        gbc.gridx = 0;
-        gbc.gridy = 3;
-        gbc.gridwidth = 2;
-        panel.add(registerButton, gbc);
-
-        registerButton.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                String name = nameField.getText();
-                String cpf = cpfField.getText();
-                boolean isAnonymous = anonymousCheckBox.isSelected();
-
-                controller.registerClient(name, cpf, isAnonymous);
-                JOptionPane.showMessageDialog(ClientView.this, "Client registered successfully!", "Success", JOptionPane.INFORMATION_MESSAGE);
+    public Client show(Vehicle vehicle) {
+        boolean isExistingClient = showConfirmDialog("Is this vehicle associated with an existing client?", "Yes", "No");
+        if (isExistingClient) {
+            String clientName = showInputDialog("Enter client name:");
+            Client client = clientController.getClientByName(clientName);
+            if (client != null) {
+                return client;
+            } else {
+                showAlert("Client not found.");
+                return null;
             }
-        });
+        } else {
+            boolean registerNewClient = showConfirmDialog("Do you want to register a new client?", "Yes", "No");
+            if (registerNewClient) {
+                String name = showInputDialog("Enter client name:");
+                String cpf = showInputDialog("Enter client CPF:");
+                clientController.registerClient(name, cpf, false);
+                return clientController.getClientByName(name);
+            } else {
+                clientController.registerClient("Anonymous", "", true);
+                return clientController.getClientByName("Anonymous");
+            }
+        }
+    }
 
-        add(panel);
-        setVisible(true);
+    private boolean showConfirmDialog(String message, String positiveButtonText, String negativeButtonText) {
+        Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
+        alert.setTitle("Confirmation");
+        alert.setHeaderText(null);
+        alert.setContentText(message);
+
+        ButtonType positiveButton = new ButtonType(positiveButtonText);
+        ButtonType negativeButton = new ButtonType(negativeButtonText);
+        alert.getButtonTypes().setAll(positiveButton, negativeButton);
+
+        Optional<ButtonType> result = alert.showAndWait();
+        return result.isPresent() && result.get() == positiveButton;
+    }
+
+    private void showAlert(String message) {
+        Alert alert = new Alert(Alert.AlertType.INFORMATION);
+        alert.setTitle("Information");
+        alert.setHeaderText(null);
+        alert.setContentText(message);
+        alert.showAndWait();
+    }
+
+    private String showInputDialog(String message) {
+        TextInputDialog dialog = new TextInputDialog();
+        dialog.setTitle("Input");
+        dialog.setHeaderText(null);
+        dialog.setContentText(message);
+        Optional<String> result = dialog.showAndWait();
+        return result.orElse(null);
     }
 }

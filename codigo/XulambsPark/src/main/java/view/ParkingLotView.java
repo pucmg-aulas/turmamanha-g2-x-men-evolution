@@ -1,53 +1,57 @@
 package view;
 
+import controller.ParkingLotController;
+import javafx.application.Application;
+import javafx.scene.Scene;
+import javafx.scene.control.Button;
+import javafx.scene.layout.GridPane;
+import javafx.stage.Stage;
 import model.ParkingLot;
 import model.ParkingSpot;
+import javafx.scene.paint.Color;
 
-import javax.swing.*;
-import java.awt.*;
 import java.util.Map;
-import java.util.TreeMap;
 
-public class ParkingLotView extends JFrame {
-    private ParkingLot parkingLot;
+public class ParkingLotView extends Application {
+    private ParkingLotController controller;
+    private String parkingLotName;
 
-    public ParkingLotView(ParkingLot parkingLot) {
-        this.parkingLot = parkingLot;
+    public ParkingLotView(ParkingLotController controller, String parkingLotName) {
+        this.controller = controller;
+        this.parkingLotName = parkingLotName;
+    }
 
-        setTitle("Vizualizar Estacionamento");
-        setSize(400, 300);
-        setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-        setLocationRelativeTo(null);
+    @Override
+    public void start(Stage primaryStage) {
+        primaryStage.setTitle("Parking Lot: " + parkingLotName);
+        GridPane gridPane = new GridPane();
 
-        JPanel panel = new JPanel(new GridBagLayout());
-        panel.setBorder(BorderFactory.createEmptyBorder(20, 20, 20, 20));
-        GridBagConstraints gbc = new GridBagConstraints();
-        gbc.insets = new Insets(10, 10, 10, 10);
-        gbc.fill = GridBagConstraints.HORIZONTAL;
-
-        JLabel titleLabel = new JLabel("Estacionamento: " + parkingLot.getName());
-        titleLabel.setFont(new Font("Arial", Font.BOLD, 16));
-        gbc.gridx = 0;
-        gbc.gridy = 0;
-        gbc.gridwidth = 2;
-        panel.add(titleLabel, gbc);
-
-        int row = 1;
-        Map<String, ParkingSpot> sortedSpots = new TreeMap<>(parkingLot.getSpots());
-        for (Map.Entry<String, ParkingSpot> entry : sortedSpots.entrySet()) {
+        ParkingLot parkingLot = controller.getParkingLot(parkingLotName);
+        int row = 0;
+        int col = 0;
+        for (Map.Entry<String, ParkingSpot> entry : parkingLot.getSpots().entrySet()) {
             String spotId = entry.getKey();
             ParkingSpot spot = entry.getValue();
-
-            JLabel spotLabel = new JLabel("Vaga " + spotId + ": " + (spot.isOccupied() ? "Ocupada" : "Livre") + " (" + spot.getType().getTipo() + ")");
-            spotLabel.setFont(new Font("Arial", Font.PLAIN, 14));
-            gbc.gridx = 0;
-            gbc.gridy = row++;
-            gbc.gridwidth = 2;
-            panel.add(spotLabel, gbc);
+            Button button = new Button(spotId);
+            button.setStyle("-fx-background-color: " + (spot.isOccupied() ? "red" : toHexString(spot.getType().getColor())));
+            button.setOnAction(e -> controller.handleButtonAction(spot, button));
+            gridPane.add(button, col, row);
+            col++;
+            if (col == 10) {
+                col = 0;
+                row++;
+            }
         }
 
-        JScrollPane scrollPane = new JScrollPane(panel);
-        add(scrollPane);
-        setVisible(true);
+        Scene scene = new Scene(gridPane, 800, 600);
+        primaryStage.setScene(scene);
+        primaryStage.show();
+    }
+
+    private String toHexString(Color color) {
+        return String.format("#%02X%02X%02X",
+                (int) (color.getRed() * 255),
+                (int) (color.getGreen() * 255),
+                (int) (color.getBlue() * 255));
     }
 }

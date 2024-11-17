@@ -1,14 +1,14 @@
 ParkingLot: Xulambs Parking, Spots: 10
-  Spot: A1, Type: Regular, Vehicle: a
-  Spot: A2, Type: Regular, Vehicle: empty
-  Spot: A3, Type: Regular, Vehicle: empty
-  Spot: A4, Type: Regular, Vehicle: empty
-  Spot: A5, Type: Regular, Vehicle: empty
-  Spot: A6, Type: Regular, Vehicle: empty
-  Spot: A7, Type: Regular, Vehicle: empty
-  Spot: A8, Type: Regular, Vehicle: empty
-  Spot: A9, Type: Regular, Vehicle: empty
-  Spot: B1, Type: Regular, Vehicle: empty
+  Spot: A1, Type: REGULAR, Vehicle: empty
+  Spot: A2, Type: REGULAR, Vehicle: empty
+  Spot: A3, Type: REGULAR, Vehicle: empty
+  Spot: A4, Type: REGULAR, Vehicle: empty
+  Spot: A5, Type: REGULAR, Vehicle: empty
+  Spot: A6, Type: REGULAR, Vehicle: empty
+  Spot: A7, Type: REGULAR, Vehicle: empty
+  Spot: A8, Type: REGULAR, Vehicle: empty
+  Spot: A9, Type: REGULAR, Vehicle: empty
+  Spot: B1, Type: REGULAR, Vehicle: empty
 ParkingLot: Xulambs Parking 2, Spots: 20
   Spot: A1, Type: VIP, Vehicle: empty
   Spot: A2, Type: VIP, Vehicle: empty
@@ -31,36 +31,36 @@ ParkingLot: Xulambs Parking 2, Spots: 20
   Spot: C1, Type: VIP, Vehicle: empty
   Spot: C2, Type: VIP, Vehicle: empty
 ParkingLot: Xulambs Parking 3, Spots: 30
-  Spot: A1, Type: Idoso, Vehicle: empty
-  Spot: A2, Type: Idoso, Vehicle: empty
-  Spot: A3, Type: Idoso, Vehicle: empty
-  Spot: A4, Type: Idoso, Vehicle: empty
-  Spot: A5, Type: Idoso, Vehicle: empty
-  Spot: A6, Type: Idoso, Vehicle: empty
-  Spot: A7, Type: Idoso, Vehicle: empty
-  Spot: A8, Type: Idoso, Vehicle: empty
-  Spot: A9, Type: Idoso, Vehicle: empty
-  Spot: B1, Type: Idoso, Vehicle: empty
-  Spot: B2, Type: Idoso, Vehicle: empty
-  Spot: B3, Type: Idoso, Vehicle: empty
-  Spot: B4, Type: Idoso, Vehicle: empty
-  Spot: B5, Type: Idoso, Vehicle: empty
-  Spot: B6, Type: Idoso, Vehicle: empty
-  Spot: B7, Type: Idoso, Vehicle: empty
-  Spot: B8, Type: Idoso, Vehicle: empty
-  Spot: B9, Type: Idoso, Vehicle: empty
-  Spot: C1, Type: Idoso, Vehicle: empty
-  Spot: C2, Type: Idoso, Vehicle: empty
-  Spot: C3, Type: Idoso, Vehicle: empty
-  Spot: C4, Type: Idoso, Vehicle: empty
-  Spot: C5, Type: Idoso, Vehicle: empty
-  Spot: C6, Type: Idoso, Vehicle: empty
-  Spot: C7, Type: Idoso, Vehicle: empty
-  Spot: C8, Type: Idoso, Vehicle: empty
-  Spot: C9, Type: Idoso, Vehicle: empty
-  Spot: D1, Type: Idoso, Vehicle: empty
-  Spot: D2, Type: Idoso, Vehicle: empty
-  Spot: D3, Type: Idoso, Vehicle: empty
+  Spot: A1, Type: IDOSO, Vehicle: empty
+  Spot: A2, Type: IDOSO, Vehicle: empty
+  Spot: A3, Type: IDOSO, Vehicle: empty
+  Spot: A4, Type: IDOSO, Vehicle: empty
+  Spot: A5, Type: IDOSO, Vehicle: empty
+  Spot: A6, Type: IDOSO, Vehicle: empty
+  Spot: A7, Type: IDOSO, Vehicle: empty
+  Spot: A8, Type: IDOSO, Vehicle: empty
+  Spot: A9, Type: IDOSO, Vehicle: empty
+  Spot: B1, Type: IDOSO, Vehicle: empty
+  Spot: B2, Type: IDOSO, Vehicle: empty
+  Spot: B3, Type: IDOSO, Vehicle: empty
+  Spot: B4, Type: IDOSO, Vehicle: empty
+  Spot: B5, Type: IDOSO, Vehicle: empty
+  Spot: B6, Type: IDOSO, Vehicle: empty
+  Spot: B7, Type: IDOSO, Vehicle: empty
+  Spot: B8, Type: IDOSO, Vehicle: empty
+  Spot: B9, Type: IDOSO, Vehicle: empty
+  Spot: C1, Type: IDOSO, Vehicle: empty
+  Spot: C2, Type: IDOSO, Vehicle: empty
+  Spot: C3, Type: IDOSO, Vehicle: empty
+  Spot: C4, Type: IDOSO, Vehicle: empty
+  Spot: C5, Type: IDOSO, Vehicle: empty
+  Spot: C6, Type: IDOSO, Vehicle: empty
+  Spot: C7, Type: IDOSO, Vehicle: empty
+  Spot: C8, Type: IDOSO, Vehicle: empty
+  Spot: C9, Type: IDOSO, Vehicle: empty
+  Spot: D1, Type: IDOSO, Vehicle: empty
+  Spot: D2, Type: IDOSO, Vehicle: empty
+  Spot: D3, Type: IDOSO, Vehicle: empty
 ParkingLot: Xulambs Parking 4, Spots: 40
   Spot: A1, Type: PCD, Vehicle: empty
   Spot: A2, Type: PCD, Vehicle: empty

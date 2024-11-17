@@ -6,7 +6,7 @@ import model.Client;
 import java.util.*;
 
 public class ClientController {
-    private Map<String, Client> clients; // Change to String to match the shortened UUID
+    private Map<String, Client> clients;
     private ClientDAO clientDAO;
 
     public ClientController() {
@@ -17,7 +17,7 @@ public class ClientController {
     public void registerClient(String name, String cpf, boolean isAnonymous) {
         Client client;
         UUID uuid = UUID.randomUUID();
-        String shortId = uuid.toString().substring(0, 8); // Generate a shorter ID
+        String shortId = uuid.toString().substring(0, 8);
         if (isAnonymous) {
             client = new Client("Anonymous", uuid, "");
         } else {

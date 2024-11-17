@@ -1,4 +1,3 @@
-// DAO/ParkingLotDAO.java
 package DAO;
 
 import model.*;
@@ -19,16 +18,13 @@ public class ParkingLotDAO {
                     String[] parts = line.split(", ");
                     String name = parts[0].split(": ")[1];
                     int numberOfSpots = Integer.parseInt(parts[1].split(": ")[1]);
-                    ParkingLot parkingLot = new ParkingLot(name, numberOfSpots, new VagaRegular()); // Default type
+                    ParkingLot parkingLot = new ParkingLot(name, numberOfSpots, SpotType.REGULAR); // Default type
                     for (int i = 0; i < numberOfSpots; i++) {
                         line = reader.readLine();
                         parts = line.split(", ");
                         String spotId = parts[0].split(": ")[1];
                         String typeName = parts[1].split(": ")[1];
-                        ITipoVaga type = getTypeByName(typeName);
-                        if (type == null) {
-                            throw new IllegalArgumentException("Unknown type: " + typeName);
-                        }
+                        SpotType type = SpotType.valueOf(typeName.toUpperCase());
                         ParkingSpot spot = new ParkingSpot(spotId, type);
                         if (!"empty".equals(parts[2].split(": ")[1])) {
                             String placa = parts[2].split(": ")[1];
@@ -46,21 +42,6 @@ public class ParkingLotDAO {
         }
     }
 
-    private ITipoVaga getTypeByName(String typeName) {
-        switch (typeName) {
-            case "Regular":
-                return new VagaRegular();
-            case "VIP":
-                return new VagaVIP();
-            case "Idoso":
-                return new VagaIdoso();
-            case "PCD":
-                return new VagaPCD();
-            default:
-                return null;
-        }
-    }
-
     public void save(ParkingLot parkingLot) {
         parkingLots.put(parkingLot.getName(), parkingLot);
         saveToFile();
@@ -72,7 +53,7 @@ public class ParkingLotDAO {
                 writer.write("ParkingLot: " + parkingLot.getName() + ", Spots: " + parkingLot.getSpots().size());
                 writer.newLine();
                 for (ParkingSpot spot : parkingLot.getSpots().values()) {
-                    writer.write("  Spot: " + spot.getId() + ", Type: " + spot.getType().getTipo() + ", Vehicle: " + (spot.isOccupied() ? spot.getVehicle().getPlaca() : "empty"));
+                    writer.write("  Spot: " + spot.getId() + ", Type: " + spot.getType().name() + ", Vehicle: " + (spot.isOccupied() ? spot.getVehicle().getPlaca() : "empty"));
                     writer.newLine();
                 }
             }

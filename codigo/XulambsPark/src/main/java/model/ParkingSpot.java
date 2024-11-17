@@ -1,21 +1,25 @@
 package model;
 
+import java.time.LocalDateTime;
+
 public class ParkingSpot {
     private String id;
-    private ITipoVaga type;
+    private SpotType type;
     private Vehicle vehicle;
+    private LocalDateTime startTime;
 
-    public ParkingSpot(String id, ITipoVaga type) {
+    public ParkingSpot(String id, SpotType type) {
         this.id = id;
         this.type = type;
         this.vehicle = null;
+        this.startTime = null;
     }
 
     public String getId() {
         return id;
     }
 
-    public ITipoVaga getType() {
+    public SpotType getType() {
         return type;
     }
 
@@ -29,9 +33,15 @@ public class ParkingSpot {
 
     public void occupy(Vehicle vehicle) {
         this.vehicle = vehicle;
+        this.startTime = LocalDateTime.now();
     }
 
     public void vacate() {
         this.vehicle = null;
+        this.startTime = null;
+    }
+
+    public LocalDateTime getStartTime() {
+        return startTime;
     }
 }
