@@ -4,6 +4,7 @@ import DAO.ParkingLotDAO;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.ButtonType;
+import javafx.scene.paint.Color;
 import model.*;
 import view.ClientView;
 import view.VehicleView;
@@ -19,26 +20,33 @@ public class ParkingLotController {
     private Map<String, ParkingLot> parkingLots;
     private ParkingLotDAO parkingLotDAO;
     private ClientController clientController;
+    private VehicleController vehicleController;
 
     public ParkingLotController() {
         this.parkingLotDAO = new ParkingLotDAO();
         this.parkingLotDAO.loadFromFile();
         this.parkingLots = new LinkedHashMap<>(this.parkingLotDAO.findAll());
         this.clientController = new ClientController();
+        this.vehicleController = new VehicleController();
     }
 
     public void handleButtonAction(ParkingSpot spot, Button button) {
         if (!spot.isOccupied()) {
-            Vehicle vehicle = new VehicleView().show();
-            if (vehicle != null) {
-                Client client = new ClientView(clientController).show(vehicle);
+            String placa = new VehicleView(vehicleController).showPlateInputDialog();
+            if (placa != null && !placa.trim().isEmpty()) {
+                Client client = new ClientView(clientController).show();
                 if (client != null) {
-                    client.addVehicle(vehicle);
-                    if (parkVehicle(spot.getId(), vehicle)) {
-                        spot.occupy(vehicle);
-                        button.setStyle("-fx-background-color: red");
-                    } else {
-                        showAlert("Failed to park vehicle.");
+                    Vehicle vehicle = new VehicleView(vehicleController).showAdditionalInfo(placa, client.getName(), client.getCpf());
+                    if (vehicle != null) {
+                        client.addVehicle(vehicle);
+                        clientController.updateClient(client);
+                        vehicleController.registerVehicle(vehicle);
+                        if (parkVehicle(spot.getId(), vehicle)) {
+                            spot.occupy(vehicle);
+                            button.setStyle("-fx-background-color: red");
+                        } else {
+                            showAlert("Failed to park vehicle.");
+                        }
                     }
                 }
             }
@@ -49,7 +57,7 @@ public class ParkingLotController {
                 showAlert("Total amount due: " + valor);
                 if (vacateSpot(spot.getId())) {
                     spot.vacate();
-                    button.setStyle("-fx-background-color: " + spot.getType().getColor().toString());
+                    button.setStyle("-fx-background-color: " + toHexString(spot.getType().getColor()));
                 } else {
                     showAlert("Failed to vacate spot.");
                 }
@@ -122,9 +130,12 @@ public class ParkingLotController {
             ParkingSpot spot = parkingLot.getSpot(spotId);
             if (spot != null && spot.isOccupied()) {
                 long minutes = ChronoUnit.MINUTES.between(spot.getStartTime(), LocalDateTime.now());
+                System.out.println("Minutes parked: " + minutes);
                 double tarifaBase = 4.0 * Math.ceil(minutes / 15.0);
+                System.out.println("Base tariff before cap: " + tarifaBase);
                 tarifaBase = Math.min(tarifaBase, 50.0);
-                return tarifaBase; // Ajuste conforme necessário
+                System.out.println("Final tariff: " + tarifaBase);
+                return tarifaBase;
             }
         }
         return 0;
@@ -136,5 +147,12 @@ public class ParkingLotController {
 
     public void registerClient(String name, String cpf, boolean isAnonymous) {
         clientController.registerClient(name, cpf, isAnonymous);
+    }
+
+    private String toHexString(Color color) {
+        return String.format("#%02X%02X%02X",
+                (int) (color.getRed() * 255),
+                (int) (color.getGreen() * 255),
+                (int) (color.getBlue() * 255));
     }
 }

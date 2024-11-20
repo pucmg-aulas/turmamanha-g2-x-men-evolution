@@ -1,31 +1,20 @@
 package view;
 
-import javafx.scene.control.ButtonType;
-import javafx.scene.control.TextInputDialog;
+import controller.VehicleController;
 import model.Vehicle;
 
-import java.util.Optional;
-
 public class VehicleView {
-    public Vehicle show() {
-        String placa = showInputDialog("Enter vehicle plate:");
-        if (placa != null && !placa.trim().isEmpty()) {
-            return new Vehicle(placa, "", "", "", "");
-        }
-        return null;
+    private VehicleController vehicleController;
+
+    public VehicleView(VehicleController vehicleController) {
+        this.vehicleController = vehicleController;
     }
 
-    private String showInputDialog(String message) {
-        TextInputDialog dialog = new TextInputDialog();
-        dialog.setTitle("Input");
-        dialog.setHeaderText(null);
-        dialog.setContentText(message);
+    public String showPlateInputDialog() {
+        return vehicleController.showPlateInputDialog();
+    }
 
-        ButtonType confirmButton = new ButtonType("Confirm");
-        ButtonType cancelButton = new ButtonType("Cancel");
-        dialog.getDialogPane().getButtonTypes().setAll(confirmButton, cancelButton);
-
-        Optional<String> result = dialog.showAndWait();
-        return result.orElse(null);
+    public Vehicle showAdditionalInfo(String placa, String owner, String cpf) {
+        return vehicleController.showAdditionalInfo(placa, owner, cpf);
     }
 }

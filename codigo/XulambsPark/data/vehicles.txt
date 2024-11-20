@@ -1,6 +1,18 @@
 Placa: a
-Model: b
-Color: c
-Owner: Jorge
-CPF: 121412
+Model: Gol
+Color: Branco
+Owner: Joao
+CPF: 10
+---
+Placa: 145
+Model: corola
+Color: preto
+Owner: Anonymous
+CPF: 
+---
+Placa: buceta
+Model: 
+Color: 
+Owner: Anonymous
+CPF: 
 ---

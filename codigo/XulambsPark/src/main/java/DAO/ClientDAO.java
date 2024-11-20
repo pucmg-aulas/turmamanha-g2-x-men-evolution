@@ -1,6 +1,8 @@
 package DAO;
 
 import model.Client;
+import model.Vehicle;
+
 import java.io.*;
 import java.util.*;
 
@@ -19,6 +21,9 @@ public class ClientDAO {
                     writer.write("ID: " + client.getId().toString().substring(0, 8) + "\n");
                     writer.write("Nome: " + client.getName() + "\n");
                     writer.write("CPF: " + client.getCpf() + "\n");
+                    for (Vehicle vehicle : client.getVehicles()) {
+                        writer.write("Veiculo: " + vehicle.getPlaca() + "\n");
+                    }
                     writer.write("\n"); // Add a blank line between clients
                 }
             }
@@ -38,8 +43,12 @@ public class ClientDAO {
                     String nome = reader.readLine().substring(6);
                     String cpf = reader.readLine().substring(5);
                     Client client = new Client(nome, id, cpf);
+                    while ((line = reader.readLine()) != null && line.startsWith("Veiculo: ")) {
+                        String placa = line.substring(9);
+                        Vehicle vehicle = new Vehicle(placa, "", "", "", "");
+                        client.addVehicle(vehicle);
+                    }
                     clients.put(shortId, client);
-                    reader.readLine(); // Skip the blank line
                 }
             }
         } catch (IOException e) {

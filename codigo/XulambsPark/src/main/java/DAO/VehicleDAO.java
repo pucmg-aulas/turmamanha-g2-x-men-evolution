@@ -57,6 +57,8 @@ public class VehicleDAO {
             }
         } catch (IOException e) {
             e.printStackTrace();
+        } catch (StringIndexOutOfBoundsException e) {
+            System.err.println("Error parsing file: " + e.getMessage());
         }
     }
 }
