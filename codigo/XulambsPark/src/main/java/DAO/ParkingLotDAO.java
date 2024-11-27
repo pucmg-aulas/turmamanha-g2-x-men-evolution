@@ -30,8 +30,9 @@ public class ParkingLotDAO {
                     ResultSet spotRs = spotStmt.executeQuery();
                     while (spotRs.next()) {
                         String spotId = spotRs.getString("id");
+                        String position = spotRs.getString("position");
                         SpotType type = SpotType.valueOf(spotRs.getString("type").toUpperCase());
-                        ParkingSpot spot = new ParkingSpot(spotId, type);
+                        ParkingSpot spot = new ParkingSpot(spotId, position, type);
                         String vehiclePlaca = spotRs.getString("vehicle_placa");
                         if (vehiclePlaca != null) {
                             Vehicle vehicle = new Vehicle(vehiclePlaca, "", "", "", "");
@@ -57,13 +58,14 @@ public class ParkingLotDAO {
             stmt.setInt(2, parkingLot.getSpots().size());
             stmt.executeUpdate();
 
-            String spotSql = "INSERT INTO parking_spots (id, type, vehicle_placa, parking_lot_name) VALUES (?, ?, ?, ?) ON CONFLICT (id) DO UPDATE SET type = EXCLUDED.type, vehicle_placa = EXCLUDED.vehicle_placa, parking_lot_name = EXCLUDED.parking_lot_name";
+            String spotSql = "INSERT INTO parking_spots (id, position, type, vehicle_placa, parking_lot_name) VALUES (?, ?, ?, ?, ?) ON CONFLICT (id, parking_lot_name) DO UPDATE SET position = EXCLUDED.position, type = EXCLUDED.type, vehicle_placa = EXCLUDED.vehicle_placa";
             try (PreparedStatement spotStmt = conn.prepareStatement(spotSql)) {
                 for (ParkingSpot spot : parkingLot.getSpots().values()) {
                     spotStmt.setString(1, spot.getId());
-                    spotStmt.setString(2, spot.getType().name());
-                    spotStmt.setString(3, spot.isOccupied() ? spot.getVehicle().getPlaca() : null);
-                    spotStmt.setString(4, parkingLot.getName());
+                    spotStmt.setString(2, spot.getPosition());
+                    spotStmt.setString(3, spot.getType().name());
+                    spotStmt.setString(4, spot.isOccupied() ? spot.getVehicle().getPlaca() : null);
+                    spotStmt.setString(5, parkingLot.getName());
                     spotStmt.addBatch();
                 }
                 spotStmt.executeBatch();

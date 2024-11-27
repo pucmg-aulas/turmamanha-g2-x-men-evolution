@@ -36,12 +36,16 @@ public class ParkingLotController {
     public void registerParkingLot(String name, Map<String, SpotType> spots) {
         ParkingLot parkingLot = new ParkingLot(name);
         for (Map.Entry<String, SpotType> entry : spots.entrySet()) {
-            parkingLot.getSpots().put(entry.getKey(), new ParkingSpot(entry.getKey(), entry.getValue()));
+            String position = entry.getKey();
+            SpotType type = entry.getValue();
+            String uniqueSpotId = name + "_" + position; // Ensure unique ID by including parking lot name
+            parkingLot.getSpots().put(uniqueSpotId, new ParkingSpot(uniqueSpotId, position, type));
         }
         parkingLotDAO.save(parkingLot);
         parkingLots.put(name, parkingLot); // Ensure the parking lot is added to the map
         System.out.println("Parking lot registered: " + name);
     }
+
 
     public void handleButtonAction(ParkingSpot spot, Button button) {
         if (!spot.isOccupied()) {
