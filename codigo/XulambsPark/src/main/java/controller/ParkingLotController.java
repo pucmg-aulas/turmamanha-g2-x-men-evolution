@@ -1,5 +1,7 @@
+// src/main/java/controller/ParkingLotController.java
 package controller;
 
+import DAO.HistoricalDAO;
 import DAO.ParkingLotDAO;
 import DAO.ParkingSpotDAO;
 import javafx.scene.control.Alert;
@@ -21,12 +23,14 @@ public class ParkingLotController {
     private Map<String, ParkingLot> parkingLots;
     private ParkingLotDAO parkingLotDAO;
     private ParkingSpotDAO parkingSpotDAO;
+    private HistoricalDAO historicalDAO;
     private ClientController clientController;
     private VehicleController vehicleController;
 
     public ParkingLotController() {
         this.parkingLotDAO = new ParkingLotDAO();
         this.parkingSpotDAO = new ParkingSpotDAO();
+        this.historicalDAO = new HistoricalDAO();
         this.parkingLotDAO.loadFromDatabase();
         this.parkingLots = new LinkedHashMap<>(this.parkingLotDAO.findAll());
         this.clientController = new ClientController();
@@ -38,14 +42,13 @@ public class ParkingLotController {
         for (Map.Entry<String, SpotType> entry : spots.entrySet()) {
             String position = entry.getKey();
             SpotType type = entry.getValue();
-            String uniqueSpotId = name + "_" + position; // Ensure unique ID by including parking lot name
+            String uniqueSpotId = name + "_" + position;
             parkingLot.getSpots().put(uniqueSpotId, new ParkingSpot(uniqueSpotId, position, type));
         }
         parkingLotDAO.save(parkingLot);
-        parkingLots.put(name, parkingLot); // Ensure the parking lot is added to the map
+        parkingLots.put(name, parkingLot);
         System.out.println("Parking lot registered: " + name);
     }
-
 
     public void handleButtonAction(ParkingSpot spot, Button button) {
         if (!spot.isOccupied()) {
@@ -73,6 +76,25 @@ public class ParkingLotController {
             if (confirm) {
                 double valor = calcularTarifa(spot.getId());
                 showAlert("Total amount due: " + valor);
+                Vehicle vehicle = spot.getVehicle();
+                if (vehicle != null) {
+                    // Record the historical data
+                    Historical historical = new Historical(
+                            vehicle.getCpf(),
+                            vehicle.getOwner(),
+                            vehicle.getPlaca(),
+                            spot.getId(),
+                            getParkingLotNameBySpotId(spot.getId()),
+                            spot.getStartTime(),
+                            LocalDateTime.now(),
+                            valor
+                    );
+                    historicalDAO.save(historical);
+                    System.out.println("Historical data saved: " + historical);
+                } else {
+                    System.out.println("Vehicle is null, cannot save historical data.");
+                }
+
                 if (vacateSpot(spot.getId())) {
                     spot.vacate();
                     button.setStyle("-fx-background-color: " + toHexString(spot.getType().getColor()));
@@ -82,6 +104,15 @@ public class ParkingLotController {
                 }
             }
         }
+    }
+
+    private String getParkingLotNameBySpotId(String spotId) {
+        for (ParkingLot parkingLot : parkingLots.values()) {
+            if (parkingLot.getSpots().containsKey(spotId)) {
+                return parkingLot.getName();
+            }
+        }
+        return null;
     }
 
     private boolean showConfirmDialog(String message) {

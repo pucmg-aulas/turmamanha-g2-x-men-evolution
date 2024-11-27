@@ -1,3 +1,4 @@
+// src/main/java/model/ParkingSpot.java
 package model;
 
 import java.time.LocalDateTime;
@@ -49,5 +50,9 @@ public class ParkingSpot {
 
     public LocalDateTime getStartTime() {
         return startTime;
+    }
+
+    public void setStartTime(LocalDateTime startTime) {
+        this.startTime = startTime;
     }
 }

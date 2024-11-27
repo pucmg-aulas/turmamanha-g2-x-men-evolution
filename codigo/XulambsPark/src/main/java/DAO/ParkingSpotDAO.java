@@ -13,8 +13,8 @@ import java.util.Map;
 public class ParkingSpotDAO {
 
     public void save(ParkingSpot parkingSpot) {
-        String sql = "INSERT INTO parking_spots (id, position, type, vehicle_placa) VALUES (?, ?, ?, ?) " +
-                "ON CONFLICT (id) DO UPDATE SET position = EXCLUDED.position, type = EXCLUDED.type, vehicle_placa = EXCLUDED.vehicle_placa";
+        String sql = "INSERT INTO parking_spots (id, position, type, vehicle_placa, start_time) VALUES (?, ?, ?, ?, ?) " +
+                "ON CONFLICT (id) DO UPDATE SET position = EXCLUDED.position, type = EXCLUDED.type, vehicle_placa = EXCLUDED.vehicle_placa, start_time = EXCLUDED.start_time";
 
         try (Connection conn = DatabaseUtil.getConnection();
              PreparedStatement stmt = conn.prepareStatement(sql)) {
@@ -23,6 +23,7 @@ public class ParkingSpotDAO {
             stmt.setString(2, parkingSpot.getPosition());
             stmt.setString(3, parkingSpot.getType().name());
             stmt.setString(4, parkingSpot.getVehicle() != null ? parkingSpot.getVehicle().getPlaca() : null);
+            stmt.setTimestamp(5, parkingSpot.getStartTime() != null ? Timestamp.valueOf(parkingSpot.getStartTime()) : null);
             stmt.executeUpdate();
 
         } catch (SQLException e) {
@@ -44,9 +45,13 @@ public class ParkingSpotDAO {
                 String position = rs.getString("position");
                 String type = rs.getString("type");
                 String vehiclePlaca = rs.getString("vehicle_placa");
+                Timestamp startTime = rs.getTimestamp("start_time");
                 parkingSpot = new ParkingSpot(id, position, SpotType.valueOf(type.toUpperCase()));
                 if (vehiclePlaca != null) {
                     parkingSpot.occupy(new Vehicle(vehiclePlaca, "", "", "", ""));
+                }
+                if (startTime != null) {
+                    parkingSpot.setStartTime(startTime.toLocalDateTime());
                 }
             }
 
@@ -69,9 +74,13 @@ public class ParkingSpotDAO {
                 String position = rs.getString("position");
                 String type = rs.getString("type");
                 String vehiclePlaca = rs.getString("vehicle_placa");
+                Timestamp startTime = rs.getTimestamp("start_time");
                 ParkingSpot parkingSpot = new ParkingSpot(id, position, SpotType.valueOf(type.toUpperCase()));
                 if (vehiclePlaca != null) {
                     parkingSpot.occupy(new Vehicle(vehiclePlaca, "", "", "", ""));
+                }
+                if (startTime != null) {
+                    parkingSpot.setStartTime(startTime.toLocalDateTime());
                 }
                 parkingSpots.put(id, parkingSpot);
             }

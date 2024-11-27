@@ -30,9 +30,8 @@ public class ParkingLotView extends Application {
         int row = 0;
         int col = 0;
         for (Map.Entry<String, ParkingSpot> entry : parkingLot.getSpots().entrySet()) {
-            String spotId = entry.getKey();
             ParkingSpot spot = entry.getValue();
-            Button button = new Button(spotId);
+            Button button = new Button(spot.getPosition());
             button.setStyle("-fx-background-color: " + (spot.isOccupied() ? "red" : toHexString(spot.getType().getColor())));
             button.setOnAction(e -> controller.handleButtonAction(spot, button));
             gridPane.add(button, col, row);
