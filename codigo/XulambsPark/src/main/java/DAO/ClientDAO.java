@@ -1,57 +1,55 @@
 package DAO;
 
 import model.Client;
-import model.Vehicle;
+import util.DatabaseUtil;
 
-import java.io.*;
-import java.util.*;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.UUID;
 
 public class ClientDAO {
-    private static final String FILE_PATH = "data/clients.txt";
-
     public void saveClients(Map<String, Client> clients) {
-        File file = new File(FILE_PATH);
-        try {
-            if (!file.exists()) {
-                file.getParentFile().mkdirs();
-                file.createNewFile();
+        try (Connection conn = DatabaseUtil.getConnection()) {
+            String deleteSQL = "DELETE FROM clients";
+            try (PreparedStatement deleteStmt = conn.prepareStatement(deleteSQL)) {
+                deleteStmt.executeUpdate();
             }
-            try (BufferedWriter writer = new BufferedWriter(new FileWriter(file))) {
+
+            String insertSQL = "INSERT INTO clients (id, name, cpf) VALUES (?, ?, ?)";
+            try (PreparedStatement insertStmt = conn.prepareStatement(insertSQL)) {
                 for (Client client : clients.values()) {
-                    writer.write("ID: " + client.getId().toString().substring(0, 8) + "\n");
-                    writer.write("Nome: " + client.getName() + "\n");
-                    writer.write("CPF: " + client.getCpf() + "\n");
-                    for (Vehicle vehicle : client.getVehicles()) {
-                        writer.write("Veiculo: " + vehicle.getPlaca() + "\n");
-                    }
-                    writer.write("\n"); // Add a blank line between clients
+                    insertStmt.setObject(1, client.getId());
+                    insertStmt.setString(2, client.getName());
+                    insertStmt.setString(3, client.getCpf());
+                    insertStmt.addBatch();
                 }
+                insertStmt.executeBatch();
             }
-        } catch (IOException e) {
+        } catch (SQLException e) {
             e.printStackTrace();
         }
     }
 
     public Map<String, Client> loadClients() {
         Map<String, Client> clients = new HashMap<>();
-        try (BufferedReader reader = new BufferedReader(new FileReader(FILE_PATH))) {
-            String line;
-            while ((line = reader.readLine()) != null) {
-                if (line.startsWith("ID: ")) {
-                    String shortId = line.substring(4);
-                    UUID id = UUID.fromString(shortId + "00000000-0000-0000-0000-000000000000".substring(shortId.length()));
-                    String nome = reader.readLine().substring(6);
-                    String cpf = reader.readLine().substring(5);
-                    Client client = new Client(nome, id, cpf);
-                    while ((line = reader.readLine()) != null && line.startsWith("Veiculo: ")) {
-                        String placa = line.substring(9);
-                        Vehicle vehicle = new Vehicle(placa, "", "", "", "");
-                        client.addVehicle(vehicle);
+        try (Connection conn = DatabaseUtil.getConnection()) {
+            String selectSQL = "SELECT id, name, cpf FROM clients";
+            try (PreparedStatement selectStmt = conn.prepareStatement(selectSQL)) {
+                try (ResultSet rs = selectStmt.executeQuery()) {
+                    while (rs.next()) {
+                        UUID id = UUID.fromString(rs.getString("id"));
+                        String name = rs.getString("name");
+                        String cpf = rs.getString("cpf");
+                        Client client = new Client(name, id, cpf);
+                        clients.put(id.toString().substring(0, 8), client);
                     }
-                    clients.put(shortId, client);
                 }
             }
-        } catch (IOException e) {
+        } catch (SQLException e) {
             e.printStackTrace();
         }
         return clients;

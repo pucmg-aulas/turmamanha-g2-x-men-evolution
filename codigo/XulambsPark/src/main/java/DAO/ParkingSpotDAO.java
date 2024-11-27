@@ -1,26 +1,94 @@
 package DAO;
 
 import model.ParkingSpot;
+import model.SpotType;
+import model.Vehicle;
+import util.DatabaseUtil;
 
+import java.sql.*;
 import java.util.HashMap;
 import java.util.Map;
 
 public class ParkingSpotDAO {
-    private Map<String, ParkingSpot> parkingSpots = new HashMap<>();
 
     public void save(ParkingSpot parkingSpot) {
-        parkingSpots.put(parkingSpot.getId(), parkingSpot);
+        String sql = "INSERT INTO parking_spots (id, type, vehicle_placa) VALUES (?, ?, ?) " +
+                "ON CONFLICT (id) DO UPDATE SET type = EXCLUDED.type, vehicle_placa = EXCLUDED.vehicle_placa";
+
+        try (Connection conn = DatabaseUtil.getConnection();
+             PreparedStatement stmt = conn.prepareStatement(sql)) {
+
+            stmt.setString(1, parkingSpot.getId());
+            stmt.setString(2, parkingSpot.getType().name());
+            stmt.setString(3, parkingSpot.getVehicle() != null ? parkingSpot.getVehicle().getPlaca() : null);
+            stmt.executeUpdate();
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
     }
 
     public ParkingSpot findById(String id) {
-        return parkingSpots.get(id);
+        String sql = "SELECT * FROM parking_spots WHERE id = ?";
+        ParkingSpot parkingSpot = null;
+
+        try (Connection conn = DatabaseUtil.getConnection();
+             PreparedStatement stmt = conn.prepareStatement(sql)) {
+
+            stmt.setString(1, id);
+            ResultSet rs = stmt.executeQuery();
+
+            if (rs.next()) {
+                String type = rs.getString("type");
+                String vehiclePlaca = rs.getString("vehicle_placa");
+                parkingSpot = new ParkingSpot(id, SpotType.valueOf(type.toUpperCase()));
+                if (vehiclePlaca != null) {
+                    parkingSpot.occupy(new Vehicle(vehiclePlaca, "", "", "", ""));
+                }
+            }
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return parkingSpot;
     }
 
     public Map<String, ParkingSpot> findAll() {
-        return new HashMap<>(parkingSpots);
+        String sql = "SELECT * FROM parking_spots";
+        Map<String, ParkingSpot> parkingSpots = new HashMap<>();
+
+        try (Connection conn = DatabaseUtil.getConnection();
+             Statement stmt = conn.createStatement();
+             ResultSet rs = stmt.executeQuery(sql)) {
+
+            while (rs.next()) {
+                String id = rs.getString("id");
+                String type = rs.getString("type");
+                String vehiclePlaca = rs.getString("vehicle_placa");
+                ParkingSpot parkingSpot = new ParkingSpot(id, SpotType.valueOf(type.toUpperCase()));
+                if (vehiclePlaca != null) {
+                    parkingSpot.occupy(new Vehicle(vehiclePlaca, "", "", "", ""));
+                }
+                parkingSpots.put(id, parkingSpot);
+            }
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return parkingSpots;
     }
 
     public void delete(String id) {
-        parkingSpots.remove(id);
+        String sql = "DELETE FROM parking_spots WHERE id = ?";
+
+        try (Connection conn = DatabaseUtil.getConnection();
+             PreparedStatement stmt = conn.prepareStatement(sql)) {
+
+            stmt.setString(1, id);
+            stmt.executeUpdate();
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
     }
 }

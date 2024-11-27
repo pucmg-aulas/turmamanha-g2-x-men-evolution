@@ -14,7 +14,6 @@ public class VehicleController {
 
     public VehicleController() {
         this.vehicleDAO = new VehicleDAO();
-        this.vehicleDAO.loadFromFile();
     }
 
     public void registerVehicle(Vehicle vehicle) {

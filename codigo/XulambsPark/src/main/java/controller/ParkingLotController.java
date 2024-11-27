@@ -1,6 +1,7 @@
 package controller;
 
 import DAO.ParkingLotDAO;
+import DAO.ParkingSpotDAO;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.ButtonType;
@@ -19,15 +20,27 @@ import java.util.Set;
 public class ParkingLotController {
     private Map<String, ParkingLot> parkingLots;
     private ParkingLotDAO parkingLotDAO;
+    private ParkingSpotDAO parkingSpotDAO;
     private ClientController clientController;
     private VehicleController vehicleController;
 
     public ParkingLotController() {
         this.parkingLotDAO = new ParkingLotDAO();
-        this.parkingLotDAO.loadFromFile();
+        this.parkingSpotDAO = new ParkingSpotDAO();
+        this.parkingLotDAO.loadFromDatabase();
         this.parkingLots = new LinkedHashMap<>(this.parkingLotDAO.findAll());
         this.clientController = new ClientController();
         this.vehicleController = new VehicleController();
+    }
+
+    public void registerParkingLot(String name, Map<String, SpotType> spots) {
+        ParkingLot parkingLot = new ParkingLot(name);
+        for (Map.Entry<String, SpotType> entry : spots.entrySet()) {
+            parkingLot.getSpots().put(entry.getKey(), new ParkingSpot(entry.getKey(), entry.getValue()));
+        }
+        parkingLotDAO.save(parkingLot);
+        parkingLots.put(name, parkingLot); // Ensure the parking lot is added to the map
+        System.out.println("Parking lot registered: " + name);
     }
 
     public void handleButtonAction(ParkingSpot spot, Button button) {
@@ -44,6 +57,7 @@ public class ParkingLotController {
                         if (parkVehicle(spot.getId(), vehicle)) {
                             spot.occupy(vehicle);
                             button.setStyle("-fx-background-color: red");
+                            parkingSpotDAO.save(spot); // Save the spot to the database
                         } else {
                             showAlert("Failed to park vehicle.");
                         }
@@ -58,6 +72,7 @@ public class ParkingLotController {
                 if (vacateSpot(spot.getId())) {
                     spot.vacate();
                     button.setStyle("-fx-background-color: " + toHexString(spot.getType().getColor()));
+                    parkingSpotDAO.save(spot); // Update the spot in the database
                 } else {
                     showAlert("Failed to vacate spot.");
                 }
@@ -106,7 +121,7 @@ public class ParkingLotController {
             ParkingSpot spot = parkingLot.getSpot(spotId);
             if (spot != null && !spot.isOccupied()) {
                 spot.occupy(vehicle);
-                parkingLotDAO.save(parkingLot);
+                parkingSpotDAO.save(spot); // Save the spot to the database
                 return true;
             }
         }
@@ -118,7 +133,7 @@ public class ParkingLotController {
             ParkingSpot spot = parkingLot.getSpot(spotId);
             if (spot != null && spot.isOccupied()) {
                 spot.vacate();
-                parkingLotDAO.save(parkingLot);
+                parkingSpotDAO.save(spot); // Update the spot in the database
                 return true;
             }
         }

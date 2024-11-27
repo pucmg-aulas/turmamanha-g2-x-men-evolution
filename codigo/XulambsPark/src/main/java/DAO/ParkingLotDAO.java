@@ -1,63 +1,74 @@
 package DAO;
 
-import model.*;
+import model.ParkingLot;
+import model.ParkingSpot;
+import model.SpotType;
+import model.Vehicle;
+import util.DatabaseUtil;
 
-import java.io.*;
+import java.sql.*;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
 public class ParkingLotDAO {
-    private static final String FILE_NAME = "data/parkingLots.txt";
     private Map<String, ParkingLot> parkingLots = new LinkedHashMap<>();
 
-    public void loadFromFile() {
-        try (BufferedReader reader = new BufferedReader(new FileReader(FILE_NAME))) {
-            String line;
-            while ((line = reader.readLine()) != null) {
-                if (line.startsWith("ParkingLot: ")) {
-                    String[] parts = line.split(", ");
-                    String name = parts[0].split(": ")[1];
-                    int numberOfSpots = Integer.parseInt(parts[1].split(": ")[1]);
-                    ParkingLot parkingLot = new ParkingLot(name, numberOfSpots, SpotType.REGULAR); // Default type
-                    for (int i = 0; i < numberOfSpots; i++) {
-                        line = reader.readLine();
-                        parts = line.split(", ");
-                        String spotId = parts[0].split(": ")[1];
-                        String typeName = parts[1].split(": ")[1];
-                        SpotType type = SpotType.valueOf(typeName.toUpperCase());
+    public void loadFromDatabase() {
+        String sql = "SELECT * FROM parking_lots";
+        try (Connection conn = DatabaseUtil.getConnection();
+             Statement stmt = conn.createStatement();
+             ResultSet rs = stmt.executeQuery(sql)) {
+
+            while (rs.next()) {
+                String name = rs.getString("name");
+                int numberOfSpots = rs.getInt("number_of_spots");
+                ParkingLot parkingLot = new ParkingLot(name, numberOfSpots, SpotType.REGULAR); // Default type
+
+                String spotSql = "SELECT * FROM parking_spots WHERE parking_lot_name = ?";
+                try (PreparedStatement spotStmt = conn.prepareStatement(spotSql)) {
+                    spotStmt.setString(1, name);
+                    ResultSet spotRs = spotStmt.executeQuery();
+                    while (spotRs.next()) {
+                        String spotId = spotRs.getString("id");
+                        SpotType type = SpotType.valueOf(spotRs.getString("type").toUpperCase());
                         ParkingSpot spot = new ParkingSpot(spotId, type);
-                        if (!"empty".equals(parts[2].split(": ")[1])) {
-                            String placa = parts[2].split(": ")[1];
-                            Vehicle vehicle = new Vehicle(placa, "", "", "", "");
+                        String vehiclePlaca = spotRs.getString("vehicle_placa");
+                        if (vehiclePlaca != null) {
+                            Vehicle vehicle = new Vehicle(vehiclePlaca, "", "", "", "");
                             spot.occupy(vehicle);
-                            parkingLot.addVehicle(vehicle); // Adiciona o veículo ao estacionamento
+                            parkingLot.addVehicle(vehicle);
                         }
                         parkingLot.getSpots().put(spotId, spot);
                     }
-                    parkingLots.put(name, parkingLot);
                 }
+                parkingLots.put(name, parkingLot);
             }
-        } catch (IOException e) {
+        } catch (SQLException e) {
             e.printStackTrace();
         }
     }
 
     public void save(ParkingLot parkingLot) {
-        parkingLots.put(parkingLot.getName(), parkingLot);
-        saveToFile();
-    }
+        String sql = "INSERT INTO parking_lots (name, number_of_spots) VALUES (?, ?) ON CONFLICT (name) DO UPDATE SET number_of_spots = EXCLUDED.number_of_spots";
+        try (Connection conn = DatabaseUtil.getConnection();
+             PreparedStatement stmt = conn.prepareStatement(sql)) {
 
-    private void saveToFile() {
-        try (BufferedWriter writer = new BufferedWriter(new FileWriter(FILE_NAME))) {
-            for (ParkingLot parkingLot : parkingLots.values()) {
-                writer.write("ParkingLot: " + parkingLot.getName() + ", Spots: " + parkingLot.getSpots().size());
-                writer.newLine();
+            stmt.setString(1, parkingLot.getName());
+            stmt.setInt(2, parkingLot.getSpots().size());
+            stmt.executeUpdate();
+
+            String spotSql = "INSERT INTO parking_spots (id, type, vehicle_placa, parking_lot_name) VALUES (?, ?, ?, ?) ON CONFLICT (id) DO UPDATE SET type = EXCLUDED.type, vehicle_placa = EXCLUDED.vehicle_placa, parking_lot_name = EXCLUDED.parking_lot_name";
+            try (PreparedStatement spotStmt = conn.prepareStatement(spotSql)) {
                 for (ParkingSpot spot : parkingLot.getSpots().values()) {
-                    writer.write("  Spot: " + spot.getId() + ", Type: " + spot.getType().name() + ", Vehicle: " + (spot.isOccupied() ? spot.getVehicle().getPlaca() : "empty"));
-                    writer.newLine();
+                    spotStmt.setString(1, spot.getId());
+                    spotStmt.setString(2, spot.getType().name());
+                    spotStmt.setString(3, spot.isOccupied() ? spot.getVehicle().getPlaca() : null);
+                    spotStmt.setString(4, parkingLot.getName());
+                    spotStmt.addBatch();
                 }
+                spotStmt.executeBatch();
             }
-        } catch (IOException e) {
+        } catch (SQLException e) {
             e.printStackTrace();
         }
     }

@@ -16,6 +16,11 @@ public class ParkingLot {
         this.spots = new LinkedHashMap<>();
     }
 
+    public ParkingLot(String name) {
+        this.name = name;
+        this.spots = new LinkedHashMap<>(); // Initialize the spots map
+    }
+
     public String getName() {
         return name;
     }
