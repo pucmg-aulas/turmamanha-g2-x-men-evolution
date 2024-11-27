@@ -65,6 +65,20 @@ public class ParkingLotController {
                             spot.occupy(vehicle);
                             button.setStyle("-fx-background-color: red");
                             parkingSpotDAO.save(spot); // Save the spot to the database
+
+                            // Save historical data when parking the vehicle
+                            Historical historical = new Historical(
+                                    vehicle.getCpf(),
+                                    vehicle.getOwner(),
+                                    vehicle.getPlaca(),
+                                    spot.getId(),
+                                    getParkingLotNameBySpotId(spot.getId()),
+                                    spot.getStartTime(),
+                                    null, // End time will be set when vacating the spot
+                                    0.0 // Amount paid will be set when vacating the spot
+                            );
+                            historicalDAO.save(historical);
+                            System.out.println("Historical data saved: " + historical);
                         } else {
                             showAlert("Failed to park vehicle.");
                         }
@@ -78,7 +92,7 @@ public class ParkingLotController {
                 showAlert("Total amount due: " + valor);
                 Vehicle vehicle = spot.getVehicle();
                 if (vehicle != null) {
-                    // Record the historical data
+                    // Update historical data with end time and amount paid
                     Historical historical = new Historical(
                             vehicle.getCpf(),
                             vehicle.getOwner(),
@@ -89,10 +103,10 @@ public class ParkingLotController {
                             LocalDateTime.now(),
                             valor
                     );
-                    historicalDAO.save(historical);
-                    System.out.println("Historical data saved: " + historical);
+                    historicalDAO.update(historical);
+                    System.out.println("Historical data updated: " + historical);
                 } else {
-                    System.out.println("Vehicle is null, cannot save historical data.");
+                    System.out.println("Vehicle is null, cannot update historical data.");
                 }
 
                 if (vacateSpot(spot.getId())) {

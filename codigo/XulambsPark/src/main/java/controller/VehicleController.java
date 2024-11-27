@@ -1,3 +1,4 @@
+// src/main/java/controller/VehicleController.java
 package controller;
 
 import DAO.VehicleDAO;
@@ -17,8 +18,14 @@ public class VehicleController {
     }
 
     public void registerVehicle(Vehicle vehicle) {
-        vehicleDAO.save(vehicle);
-        System.out.println("Vehicle registered: " + vehicle.getPlaca());
+        Vehicle existingVehicle = vehicleDAO.findByPlaca(vehicle.getPlaca());
+        if (existingVehicle != null) {
+            vehicleDAO.update(vehicle);
+            System.out.println("Vehicle updated: " + vehicle.getPlaca());
+        } else {
+            vehicleDAO.save(vehicle);
+            System.out.println("Vehicle registered: " + vehicle.getPlaca());
+        }
     }
 
     public List<Vehicle> getVehicles() {
