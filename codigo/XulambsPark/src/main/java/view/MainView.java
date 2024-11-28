@@ -1,5 +1,6 @@
 package view;
 
+import controller.AdminController;
 import controller.ParkingLotController;
 import javafx.application.Application;
 import javafx.scene.Scene;
@@ -86,11 +87,19 @@ public class MainView extends Application {
 
         vbox.getChildren().add(newParkingLotButton);
 
+        // Adicionar botão "Acessar como administrador"
+        Button adminButton = new Button("Acessar como administrador");
+        adminButton.setOnAction(e -> {
+            AdminController adminController = new AdminController();
+            AdminView adminView = new AdminView(adminController);
+            adminView.showAdminLogin();
+        });
+
+        vbox.getChildren().add(adminButton);
+
         Scene scene = new Scene(vbox, 400, 300);
         primaryStage.setScene(scene);
         primaryStage.show();
-
-
     }
 
     private String generateSpotId(int counter) {
