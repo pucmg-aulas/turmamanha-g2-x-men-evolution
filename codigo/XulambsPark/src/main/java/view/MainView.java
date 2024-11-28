@@ -89,6 +89,8 @@ public class MainView extends Application {
         Scene scene = new Scene(vbox, 400, 300);
         primaryStage.setScene(scene);
         primaryStage.show();
+
+
     }
 
     private String generateSpotId(int counter) {

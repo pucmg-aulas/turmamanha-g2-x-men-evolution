@@ -1,4 +1,4 @@
-// src/main/java/DAO/HistoricalDAO.java
+// HistoricalDAO.java
 package DAO;
 
 import model.Historical;
@@ -6,6 +6,7 @@ import util.DatabaseUtil;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.sql.SQLException;
 
 public class HistoricalDAO {
@@ -48,5 +49,34 @@ public class HistoricalDAO {
         } catch (SQLException e) {
             e.printStackTrace();
         }
+    }
+
+    public Historical findBySpotId(String spotId) {
+        String sql = "SELECT * FROM historical WHERE spot_id = ? AND end_time IS NULL";
+
+        try (Connection conn = DatabaseUtil.getConnection();
+             PreparedStatement stmt = conn.prepareStatement(sql)) {
+
+            stmt.setString(1, spotId);
+            ResultSet rs = stmt.executeQuery();
+
+            if (rs.next()) {
+                return new Historical(
+                        rs.getString("client_cpf"),
+                        rs.getString("client_name"),
+                        rs.getString("vehicle_plate"),
+                        rs.getString("spot_id"),
+                        rs.getString("parking_lot_name"),
+                        rs.getTimestamp("start_time").toLocalDateTime(),
+                        rs.getTimestamp("end_time") != null ? rs.getTimestamp("end_time").toLocalDateTime() : null,
+                        rs.getDouble("amount_paid")
+                );
+            }
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        return null;
     }
 }

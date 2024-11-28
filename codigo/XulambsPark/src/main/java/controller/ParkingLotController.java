@@ -64,9 +64,8 @@ public class ParkingLotController {
                         if (parkVehicle(spot.getId(), vehicle)) {
                             spot.occupy(vehicle);
                             button.setStyle("-fx-background-color: red");
-                            parkingSpotDAO.save(spot); // Save the spot to the database
+                            parkingSpotDAO.save(spot);
 
-                            // Save historical data when parking the vehicle
                             Historical historical = new Historical(
                                     vehicle.getCpf(),
                                     vehicle.getOwner(),
@@ -74,11 +73,10 @@ public class ParkingLotController {
                                     spot.getId(),
                                     getParkingLotNameBySpotId(spot.getId()),
                                     spot.getStartTime(),
-                                    null, // End time will be set when vacating the spot
-                                    0.0 // Amount paid will be set when vacating the spot
+                                    null,
+                                    0.0
                             );
                             historicalDAO.save(historical);
-                            System.out.println("Historical data saved: " + historical);
                         } else {
                             showAlert("Failed to park vehicle.");
                         }
@@ -92,27 +90,18 @@ public class ParkingLotController {
                 showAlert("Total amount due: " + valor);
                 Vehicle vehicle = spot.getVehicle();
                 if (vehicle != null) {
-                    // Update historical data with end time and amount paid
-                    Historical historical = new Historical(
-                            vehicle.getCpf(),
-                            vehicle.getOwner(),
-                            vehicle.getPlaca(),
-                            spot.getId(),
-                            getParkingLotNameBySpotId(spot.getId()),
-                            spot.getStartTime(),
-                            LocalDateTime.now(),
-                            valor
-                    );
-                    historicalDAO.update(historical);
-                    System.out.println("Historical data updated: " + historical);
-                } else {
-                    System.out.println("Vehicle is null, cannot update historical data.");
+                    Historical historical = historicalDAO.findBySpotId(spot.getId());
+                    if (historical != null) {
+                        historical.setEndTime(LocalDateTime.now());
+                        historical.setAmountPaid(valor);
+                        historicalDAO.update(historical);
+                    }
                 }
 
                 if (vacateSpot(spot.getId())) {
                     spot.vacate();
                     button.setStyle("-fx-background-color: " + toHexString(spot.getType().getColor()));
-                    parkingSpotDAO.save(spot); // Update the spot in the database
+                    parkingSpotDAO.save(spot);
                 } else {
                     showAlert("Failed to vacate spot.");
                 }
@@ -176,6 +165,7 @@ public class ParkingLotController {
         }
         return false;
     }
+
 
     public boolean vacateSpot(String spotId) {
         for (ParkingLot parkingLot : parkingLots.values()) {

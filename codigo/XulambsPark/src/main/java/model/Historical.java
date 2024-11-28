@@ -55,4 +55,12 @@ public class Historical {
     public double getAmountPaid() {
         return amountPaid;
     }
+
+    public void setEndTime(LocalDateTime endTime) {
+        this.endTime = endTime;
+    }
+
+    public void setAmountPaid(double amountPaid) {
+        this.amountPaid = amountPaid;
+    }
 }
