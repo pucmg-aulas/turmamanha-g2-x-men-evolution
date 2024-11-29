@@ -24,7 +24,7 @@ public class AverageAmountView {
         Label averageAmountLabel = new Label();
         averageAmountButton.setOnAction(e -> {
             double averageAmount = adminController.getAverageAmountRaised();
-            averageAmountLabel.setText("Average Amount Raised: " + String.format("%.2f", averageAmount));
+            averageAmountLabel.setText("Average Amount Raised: R$" + String.format("%.2f", averageAmount));
         });
 
         vbox.getChildren().addAll(averageAmountButton, averageAmountLabel);

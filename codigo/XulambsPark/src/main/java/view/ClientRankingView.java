@@ -38,7 +38,7 @@ public class ClientRankingView {
             for (ClientRankingDAO.ClientRanking client : ranking) {
                 rankingMessage.append("Name: ").append(client.getClientName())
                         .append(", CPF: ").append(client.getClientCpf())
-                        .append(", Total: ").append(client.getTotalArrecadado()).append("\n");
+                        .append(", Total: R$").append(client.getTotalArrecadado()).append("\n");
             }
             clientRankingLabel.setText(rankingMessage.toString());
         });

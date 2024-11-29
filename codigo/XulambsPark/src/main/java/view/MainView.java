@@ -10,8 +10,6 @@ import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.ButtonType;
 import javafx.scene.control.ChoiceDialog;
-import javafx.scene.control.Label;
-import javafx.scene.control.TextField;
 import javafx.scene.control.TextInputDialog;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
@@ -29,7 +27,7 @@ public class MainView extends Application {
 
     @Override
     public void start(Stage primaryStage) {
-        primaryStage.setTitle("Select Parking Lot");
+        primaryStage.setTitle("Menu Xulambs Park");
         VBox vbox = new VBox(10);
         vbox.setPadding(new Insets(10));
 

@@ -24,7 +24,7 @@ public class TotalAmountView {
         Label totalAmountLabel = new Label();
         totalAmountButton.setOnAction(e -> {
             double totalAmount = adminController.getTotalAmountRaised();
-            totalAmountLabel.setText("Total Amount Raised: " + String.format("%.2f", totalAmount));
+            totalAmountLabel.setText("Total Amount Raised: R$" + String.format("%.2f", totalAmount));
         });
 
         vbox.getChildren().addAll(totalAmountButton, totalAmountLabel);

@@ -21,8 +21,8 @@ public class MostUsedSpotsView {
         try {
             adminController.getMostUsedSpots().forEach(spot -> {
                 listView.getItems().add(
-                        "ID da vaga: " + spot.getSpotId() +
-                                "  ---  Ocupações: " + spot.getOcupacoes()
+                        "Vaga: " + spot.getSpotId() +
+                                "  ---  Número de ocupações: " + spot.getOcupacoes()
                 );
             });
         } catch (Exception e) {
