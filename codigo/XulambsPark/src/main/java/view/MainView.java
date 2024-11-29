@@ -1,13 +1,17 @@
 package view;
 
 import controller.AdminController;
+import controller.ClientHistoricalController;
 import controller.ParkingLotController;
 import javafx.application.Application;
+import javafx.geometry.Insets;
 import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.ButtonType;
 import javafx.scene.control.ChoiceDialog;
+import javafx.scene.control.Label;
+import javafx.scene.control.TextField;
 import javafx.scene.control.TextInputDialog;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
@@ -26,7 +30,8 @@ public class MainView extends Application {
     @Override
     public void start(Stage primaryStage) {
         primaryStage.setTitle("Select Parking Lot");
-        VBox vbox = new VBox();
+        VBox vbox = new VBox(10);
+        vbox.setPadding(new Insets(10));
 
         for (String parkingLotName : controller.getParkingLots()) {
             Button button = new Button(parkingLotName);
@@ -86,6 +91,10 @@ public class MainView extends Application {
         });
 
         vbox.getChildren().add(newParkingLotButton);
+
+        Button clientHistoricalButton = new Button("Consultar histórico de cliente");
+        clientHistoricalButton.setOnAction(e -> new ClientHistoricalView(new ClientHistoricalController()).show());
+        vbox.getChildren().add(clientHistoricalButton);
 
         // Adicionar botão "Acessar como administrador"
         Button adminButton = new Button("Acessar como administrador");
