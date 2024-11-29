@@ -1,4 +1,3 @@
-// src/main/java/DAO/ParkingSpotDAO.java
 package DAO;
 
 import model.ParkingSpot;

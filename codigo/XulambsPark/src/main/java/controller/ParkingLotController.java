@@ -1,4 +1,3 @@
-// src/main/java/controller/ParkingLotController.java
 package controller;
 
 import DAO.HistoricalDAO;
@@ -13,7 +12,6 @@ import view.ClientView;
 import view.VehicleView;
 
 import java.time.LocalDateTime;
-import java.time.temporal.ChronoUnit;
 import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.Optional;
@@ -26,6 +24,7 @@ public class ParkingLotController {
     private HistoricalDAO historicalDAO;
     private ClientController clientController;
     private VehicleController vehicleController;
+    private ParkingSpotController parkingSpotController;
 
     public ParkingLotController() {
         this.parkingLotDAO = new ParkingLotDAO();
@@ -35,6 +34,7 @@ public class ParkingLotController {
         this.parkingLots = new LinkedHashMap<>(this.parkingLotDAO.findAll());
         this.clientController = new ClientController();
         this.vehicleController = new VehicleController();
+        this.parkingSpotController = new ParkingSpotController(); // Initialize the ParkingSpotController
     }
 
     public void registerParkingLot(String name, Map<String, SpotType> spots) {
@@ -86,22 +86,25 @@ public class ParkingLotController {
         } else {
             boolean confirm = showConfirmDialog("Vacate this spot?");
             if (confirm) {
-                double valor = calcularTarifa(spot.getId());
+                // Retrieve the updated ParkingSpot from the database
+                ParkingSpot updatedSpot = parkingSpotController.findParkingSpotById(spot.getId());
+                LocalDateTime endTime = LocalDateTime.now();
+                double valor = parkingSpotController.calcularTarifa(updatedSpot.getId(), endTime);
                 showAlert("Total amount due: " + valor);
-                Vehicle vehicle = spot.getVehicle();
+                Vehicle vehicle = updatedSpot.getVehicle();
                 if (vehicle != null) {
-                    Historical historical = historicalDAO.findBySpotId(spot.getId());
+                    Historical historical = historicalDAO.findBySpotId(updatedSpot.getId());
                     if (historical != null) {
-                        historical.setEndTime(LocalDateTime.now());
+                        historical.setEndTime(endTime);
                         historical.setAmountPaid(valor);
                         historicalDAO.update(historical);
                     }
                 }
 
-                if (vacateSpot(spot.getId())) {
-                    spot.vacate();
-                    button.setStyle("-fx-background-color: " + toHexString(spot.getType().getColor()));
-                    parkingSpotDAO.save(spot);
+                if (vacateSpot(updatedSpot.getId())) {
+                    updatedSpot.vacate();
+                    button.setStyle("-fx-background-color: " + toHexString(updatedSpot.getType().getColor()));
+                    parkingSpotDAO.save(updatedSpot);
                 } else {
                     showAlert("Failed to vacate spot.");
                 }
@@ -166,7 +169,6 @@ public class ParkingLotController {
         return false;
     }
 
-
     public boolean vacateSpot(String spotId) {
         for (ParkingLot parkingLot : parkingLots.values()) {
             ParkingSpot spot = parkingLot.getSpot(spotId);
@@ -177,22 +179,6 @@ public class ParkingLotController {
             }
         }
         return false;
-    }
-
-    public double calcularTarifa(String spotId) {
-        for (ParkingLot parkingLot : parkingLots.values()) {
-            ParkingSpot spot = parkingLot.getSpot(spotId);
-            if (spot != null && spot.isOccupied()) {
-                long minutes = ChronoUnit.MINUTES.between(spot.getStartTime(), LocalDateTime.now());
-                System.out.println("Minutes parked: " + minutes);
-                double tarifaBase = 4.0 * Math.ceil(minutes / 15.0);
-                System.out.println("Base tariff before cap: " + tarifaBase);
-                tarifaBase = Math.min(tarifaBase, 50.0);
-                System.out.println("Final tariff: " + tarifaBase);
-                return tarifaBase;
-            }
-        }
-        return 0;
     }
 
     public Client getClientByName(String name) {

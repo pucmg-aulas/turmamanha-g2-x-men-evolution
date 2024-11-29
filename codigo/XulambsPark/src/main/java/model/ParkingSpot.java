@@ -40,7 +40,9 @@ public class ParkingSpot {
 
     public void occupy(Vehicle vehicle) {
         this.vehicle = vehicle;
-        this.startTime = LocalDateTime.now();
+        if (this.startTime == null) {
+            this.startTime = LocalDateTime.now();
+        }
     }
 
     public void vacate() {
