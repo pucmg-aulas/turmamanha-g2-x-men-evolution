@@ -36,6 +36,21 @@ public class ParkingSpotController {
             long minutes = ChronoUnit.MINUTES.between(spot.getStartTime(), endTime);
             double tarifaBase = 4.0 * Math.ceil(minutes / 15.0);
             tarifaBase = Math.min(tarifaBase, 50.0);
+
+            switch (spot.getType()) {
+                case REGULAR:
+                    break;
+                case VIP:
+                    tarifaBase *= 1.2;
+                    break;
+                case IDOSO:
+                    tarifaBase *= 0.8;
+                    break;
+                case PCD:
+                    tarifaBase *= 0.7;
+                    break;
+            }
+
             return tarifaBase;
         }
         return 0;
