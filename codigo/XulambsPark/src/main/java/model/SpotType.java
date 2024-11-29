@@ -5,7 +5,7 @@ import javafx.scene.paint.Color;
 public enum SpotType {
     REGULAR(Color.WHITE),
     IDOSO(Color.YELLOW),
-    PCD(Color.BLUE),
+    PCD(Color.LIGHTGREEN),
     VIP(Color.MAGENTA);
 
     private final Color color;

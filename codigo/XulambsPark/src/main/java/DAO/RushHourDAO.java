@@ -11,24 +11,26 @@ import java.util.List;
 
 public class RushHourDAO {
 
-    public List<RushHour> getRushHours() {
-        String sql = "SELECT parking_lot_name, DATE_PART('hour', start_time) AS hora_movimentada, COUNT(*) AS quantidade_entradas " +
+    public List<RushHour> getRushHours(String parkingLotName) {
+        String sql = "SELECT DATE_PART('hour', start_time) AS hora_movimentada, COUNT(*) AS quantidade_entradas " +
                 "FROM historical " +
-                "GROUP BY parking_lot_name, DATE_PART('hour', start_time) " +
-                "ORDER BY parking_lot_name ASC, quantidade_entradas DESC";
+                "WHERE parking_lot_name = ? " +
+                "GROUP BY DATE_PART('hour', start_time) " +
+                "ORDER BY quantidade_entradas DESC";
 
         List<RushHour> rushHours = new ArrayList<>();
         try (Connection conn = DatabaseUtil.getConnection();
-             PreparedStatement stmt = conn.prepareStatement(sql);
-             ResultSet rs = stmt.executeQuery()) {
+             PreparedStatement stmt = conn.prepareStatement(sql)) {
 
-            while (rs.next()) {
-                RushHour rushHour = new RushHour(
-                        rs.getString("parking_lot_name"),
-                        rs.getInt("hora_movimentada"),
-                        rs.getInt("quantidade_entradas")
-                );
-                rushHours.add(rushHour);
+            stmt.setString(1, parkingLotName);
+            try (ResultSet rs = stmt.executeQuery()) {
+                while (rs.next()) {
+                    RushHour rushHour = new RushHour(
+                            rs.getInt("hora_movimentada"),
+                            rs.getInt("quantidade_entradas")
+                    );
+                    rushHours.add(rushHour);
+                }
             }
         } catch (SQLException e) {
             e.printStackTrace();
@@ -37,18 +39,12 @@ public class RushHourDAO {
     }
 
     public static class RushHour {
-        private String parkingLotName;
         private int hour;
         private int entryCount;
 
-        public RushHour(String parkingLotName, int hour, int entryCount) {
-            this.parkingLotName = parkingLotName;
+        public RushHour(int hour, int entryCount) {
             this.hour = hour;
             this.entryCount = entryCount;
-        }
-
-        public String getParkingLotName() {
-            return parkingLotName;
         }
 
         public int getHour() {

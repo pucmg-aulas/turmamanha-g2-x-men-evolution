@@ -47,7 +47,7 @@ public class AdminController {
         return mostUsedSpotsDAO.getMostUsedSpots();
     }
 
-    public List<RushHourDAO.RushHour> getRushHours() throws SQLException {
-        return rushHourDAO.getRushHours();
+    public List<RushHourDAO.RushHour> getRushHours(String parkingLotName) {
+        return rushHourDAO.getRushHours(parkingLotName);
     }
 }

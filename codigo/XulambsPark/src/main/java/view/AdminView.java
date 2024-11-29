@@ -61,7 +61,7 @@ public class AdminView {
         Button clientRankingButton = new Button("Consultar ranking de clientes");
         clientRankingButton.setOnAction(e -> new ClientRankingView(adminController).show());
 
-        Button mostUsedSpotsButton = new Button("Visualizar vagas mais utilizadas");
+        Button mostUsedSpotsButton = new Button("Consultar vagas mais utilizadas");
         mostUsedSpotsButton.setOnAction(e -> new MostUsedSpotsView(adminController).show());
 
         Button rushHourButton = new Button("Consultar horários mais movimentados");

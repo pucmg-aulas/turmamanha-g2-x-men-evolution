@@ -12,11 +12,11 @@ import java.util.List;
 public class MostUsedSpotsDAO {
 
     public List<MostUsedSpot> getMostUsedSpots() {
-        String sql = "SELECT spot_id, parking_lot_name, COUNT(*) AS ocupacoes " +
+        String sql = "SELECT spot_id, COUNT(*) AS ocupacoes " +
                 "FROM historical " +
                 "WHERE end_time IS NOT NULL " +
-                "GROUP BY spot_id, parking_lot_name " +
-                "ORDER BY parking_lot_name ASC, ocupacoes DESC";
+                "GROUP BY spot_id " +
+                "ORDER BY ocupacoes DESC";
 
         List<MostUsedSpot> mostUsedSpots = new ArrayList<>();
         try (Connection conn = DatabaseUtil.getConnection();
@@ -25,8 +25,7 @@ public class MostUsedSpotsDAO {
 
             while (rs.next()) {
                 MostUsedSpot spot = new MostUsedSpot(
-                        rs.getString("spot_id"), // Changed to getString
-                        rs.getString("parking_lot_name"),
+                        rs.getString("spot_id"),
                         rs.getInt("ocupacoes")
                 );
                 mostUsedSpots.add(spot);
@@ -38,22 +37,16 @@ public class MostUsedSpotsDAO {
     }
 
     public static class MostUsedSpot {
-        private String spotId; // Changed to String
-        private String parkingLotName;
+        private String spotId;
         private int ocupacoes;
 
-        public MostUsedSpot(String spotId, String parkingLotName, int ocupacoes) {
+        public MostUsedSpot(String spotId, int ocupacoes) {
             this.spotId = spotId;
-            this.parkingLotName = parkingLotName;
             this.ocupacoes = ocupacoes;
         }
 
         public String getSpotId() {
             return spotId;
-        }
-
-        public String getParkingLotName() {
-            return parkingLotName;
         }
 
         public int getOcupacoes() {
