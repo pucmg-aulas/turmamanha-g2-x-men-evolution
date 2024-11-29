@@ -1,10 +1,8 @@
 package controller;
 
-import DAO.AmountRaisedDAO;
-import DAO.AmountRaisedMonthDAO;
-import DAO.AverageAmountRaisedDAO;
-import DAO.ClientRankingDAO;
+import DAO.*;
 
+import java.sql.SQLException;
 import java.util.List;
 
 public class AdminController {
@@ -13,12 +11,16 @@ public class AdminController {
     private AmountRaisedMonthDAO amountRaisedMonthDAO;
     private AverageAmountRaisedDAO averageAmountRaisedDAO;
     private ClientRankingDAO clientRankingDAO;
+    private MostUsedSpotsDAO mostUsedSpotsDAO;
+    private RushHourDAO rushHourDAO;
 
     public AdminController() {
         this.amountRaisedDAO = new AmountRaisedDAO();
         this.amountRaisedMonthDAO = new AmountRaisedMonthDAO();
         this.averageAmountRaisedDAO = new AverageAmountRaisedDAO();
         this.clientRankingDAO = new ClientRankingDAO();
+        this.mostUsedSpotsDAO = new MostUsedSpotsDAO();
+        this.rushHourDAO = new RushHourDAO();
     }
 
     public boolean validateAdmin(String password) {
@@ -39,5 +41,13 @@ public class AdminController {
 
     public List<ClientRankingDAO.ClientRanking> getClientRanking(int month, int year) {
         return clientRankingDAO.getClientRanking(month, year);
+    }
+
+    public List<MostUsedSpotsDAO.MostUsedSpot> getMostUsedSpots() throws SQLException {
+        return mostUsedSpotsDAO.getMostUsedSpots();
+    }
+
+    public List<RushHourDAO.RushHour> getRushHours() throws SQLException {
+        return rushHourDAO.getRushHours();
     }
 }

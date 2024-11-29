@@ -31,7 +31,7 @@ public class MonthAmountView {
             int month = Integer.parseInt(monthField.getText());
             int year = Integer.parseInt(yearField.getText());
             double monthAmount = adminController.getAmountRaisedInMonth(month, year);
-            monthAmountLabel.setText("Amount Raised in " + month + "/" + year + ": " + monthAmount);
+            monthAmountLabel.setText("Amount Raised in " + month + "/" + year + ": " + String.format("%.2f", monthAmount));
         });
 
         vbox.getChildren().addAll(monthField, yearField, monthAmountButton, monthAmountLabel);

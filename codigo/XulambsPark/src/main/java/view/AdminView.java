@@ -61,7 +61,13 @@ public class AdminView {
         Button clientRankingButton = new Button("Consultar ranking de clientes");
         clientRankingButton.setOnAction(e -> new ClientRankingView(adminController).show());
 
-        vbox.getChildren().addAll(totalAmountButton, monthlyAmountButton, averageAmountButton, clientRankingButton);
+        Button mostUsedSpotsButton = new Button("Visualizar vagas mais utilizadas");
+        mostUsedSpotsButton.setOnAction(e -> new MostUsedSpotsView(adminController).show());
+
+        Button rushHourButton = new Button("Consultar horários mais movimentados");
+        rushHourButton.setOnAction(e -> new RushHourView(adminController).show());
+
+        vbox.getChildren().addAll(totalAmountButton, monthlyAmountButton, averageAmountButton, clientRankingButton, mostUsedSpotsButton, rushHourButton);
 
         Scene scene = new Scene(vbox, 300, 200);
         adminStage.setScene(scene);
