@@ -10,6 +10,8 @@ import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 
+import java.time.LocalDate;
+
 public class ClientHistoricalView {
     private ClientHistoricalController clientHistoricalController;
 
@@ -22,24 +24,26 @@ public class ClientHistoricalView {
         VBox vbox = new VBox(10);
 
         TextField cpfField = new TextField();
+        DatePicker startDatePicker = new DatePicker();
+        DatePicker endDatePicker = new DatePicker();
         Button searchButton = new Button("Buscar");
-        searchButton.setOnAction(event -> showHistorical(stage, cpfField.getText()));
+        searchButton.setOnAction(event -> showHistorical(stage, cpfField.getText(), startDatePicker.getValue(), endDatePicker.getValue()));
 
-        vbox.getChildren().addAll(new Label("  CPF do Cliente:"), cpfField, searchButton);
-        Scene scene = new Scene(vbox, 300, 200);
+        vbox.getChildren().addAll(new Label(" CPF do Cliente:"), cpfField, new Label(" Data de Início:"), startDatePicker, new Label(" Data de Fim:"), endDatePicker, searchButton);
+        Scene scene = new Scene(vbox, 300, 300);
         stage.setScene(scene);
         stage.setTitle("Buscar Histórico de Cliente");
         stage.show();
     }
 
-    private void showHistorical(Stage stage, String clientCpf) {
+    private void showHistorical(Stage stage, String clientCpf, LocalDate startDate, LocalDate endDate) {
         VBox vbox = new VBox(10);
 
         TableView<ClientHistoricalDAO.ClientHistorical> tableView = new TableView<>();
         ObservableList<ClientHistoricalDAO.ClientHistorical> data = FXCollections.observableArrayList();
 
         try {
-            data.addAll(clientHistoricalController.getClientHistorical(clientCpf));
+            data.addAll(clientHistoricalController.getClientHistorical(clientCpf, startDate, endDate));
         } catch (Exception e) {
             e.printStackTrace();
         }

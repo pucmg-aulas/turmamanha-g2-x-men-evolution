@@ -3,6 +3,7 @@ package view;
 import controller.AdminController;
 import controller.ClientHistoricalController;
 import controller.ParkingLotController;
+import controller.VehicleClientController;
 import javafx.application.Application;
 import javafx.geometry.Insets;
 import javafx.scene.Scene;
@@ -94,7 +95,10 @@ public class MainView extends Application {
         clientHistoricalButton.setOnAction(e -> new ClientHistoricalView(new ClientHistoricalController()).show());
         vbox.getChildren().add(clientHistoricalButton);
 
-        // Adicionar botão "Acessar como administrador"
+        Button vehicleClientButton = new Button("Consultar veículos de cliente");
+        vehicleClientButton.setOnAction(e -> new VehicleClientView(new VehicleClientController()).show());
+        vbox.getChildren().add(vehicleClientButton);
+
         Button adminButton = new Button("Acessar como administrador");
         adminButton.setOnAction(e -> {
             AdminController adminController = new AdminController();

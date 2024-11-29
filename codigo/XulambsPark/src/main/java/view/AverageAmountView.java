@@ -20,7 +20,7 @@ public class AverageAmountView {
         VBox vbox = new VBox(10);
         vbox.setPadding(new Insets(10));
 
-        Button averageAmountButton = new Button("Consultar valor médio por arrecadação");
+        Button averageAmountButton = new Button("Consultar valor médio por utilização");
         Label averageAmountLabel = new Label();
         averageAmountButton.setOnAction(e -> {
             double averageAmount = adminController.getAverageAmountRaised();

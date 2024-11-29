@@ -5,6 +5,7 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -20,11 +21,13 @@ public class ClientHistoricalDAO {
         }
     }
 
-    public List<ClientHistorical> getClientHistorical(String clientCpf) throws SQLException {
+    public List<ClientHistorical> getClientHistorical(String clientCpf, LocalDate startDate, LocalDate endDate) throws SQLException {
         List<ClientHistorical> historicalList = new ArrayList<>();
-        String sql = "SELECT vehicle_plate, spot_id, parking_lot_name, start_time, end_time, amount_paid FROM public.historical WHERE client_cpf = ?";
+        String sql = "SELECT vehicle_plate, spot_id, parking_lot_name, start_time, end_time, amount_paid FROM public.historical WHERE client_cpf = ? AND start_time >= ? AND end_time <= ?";
         try (PreparedStatement stmt = connection.prepareStatement(sql)) {
             stmt.setString(1, clientCpf);
+            stmt.setDate(2, java.sql.Date.valueOf(startDate));
+            stmt.setDate(3, java.sql.Date.valueOf(endDate));
             ResultSet rs = stmt.executeQuery();
             while (rs.next()) {
                 ClientHistorical historical = new ClientHistorical(
@@ -43,7 +46,7 @@ public class ClientHistoricalDAO {
 
     public static class ClientHistorical {
         private String vehiclePlate;
-        private String spotId; // Alterado para String
+        private String spotId;
         private String parkingLotName;
         private java.sql.Timestamp startTime;
         private java.sql.Timestamp endTime;
