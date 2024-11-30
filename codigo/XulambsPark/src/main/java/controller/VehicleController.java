@@ -37,10 +37,17 @@ public class VehicleController {
     }
 
     public Vehicle showAdditionalInfo(String placa, String owner, String cpf) {
+
+        Vehicle existingVehicle = vehicleDAO.findByPlaca(placa);
+        if (existingVehicle != null) {
+            return existingVehicle;
+        }
+
         boolean addAdditionalInfo = showConfirmDialog("Do you want to add additional vehicle information?", "Yes", "No");
         if (addAdditionalInfo) {
             String model = showInputDialog("Enter vehicle model:");
             String color = showInputDialog("Enter vehicle color:");
+
 
             if (model != null && !model.trim().isEmpty() &&
                     color != null && !color.trim().isEmpty()) {
@@ -49,6 +56,7 @@ public class VehicleController {
         }
         return new Vehicle(placa, "", "", owner, cpf);
     }
+
 
     private boolean showConfirmDialog(String message, String positiveButtonText, String negativeButtonText) {
         Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
