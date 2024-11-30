@@ -71,7 +71,7 @@ public class AdminView {
 
         Scene scene = new Scene(vbox, 300, 200);
         adminStage.setScene(scene);
-        adminStage.setTitle("Admin Interface");
+        adminStage.setTitle("Menu Admin Xulambs Park");
         adminStage.show();
     }
 }
