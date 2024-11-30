@@ -26,9 +26,9 @@ public class VehicleClientView {
     public void show() {
         Stage stage = new Stage();
         VBox vbox = new VBox(10);
-        Label label = new Label("Digite o CPF:");
+        Label label = new Label("Enter CPF:");
         TextField cpfField = new TextField();
-        Button searchButton = new Button("Consultar");
+        Button searchButton = new Button("Search");
 
         searchButton.setOnAction(e -> {
             String cpf = cpfField.getText();
@@ -39,7 +39,7 @@ public class VehicleClientView {
         vbox.getChildren().addAll(label, cpfField, searchButton);
         Scene scene = new Scene(vbox, 300, 200);
         stage.setScene(scene);
-        stage.setTitle("Consulta de Veículos");
+        stage.setTitle("Vehicle Consultation");
         stage.show();
     }
 
@@ -48,13 +48,13 @@ public class VehicleClientView {
         VBox vbox = new VBox(10);
         TableView<Vehicle> tableView = new TableView<>();
 
-        TableColumn<Vehicle, String> placaColumn = new TableColumn<>("Placa");
+        TableColumn<Vehicle, String> placaColumn = new TableColumn<>("Plate");
         placaColumn.setCellValueFactory(new PropertyValueFactory<>("placa"));
 
-        TableColumn<Vehicle, String> modelColumn = new TableColumn<>("Modelo");
+        TableColumn<Vehicle, String> modelColumn = new TableColumn<>("Model");
         modelColumn.setCellValueFactory(new PropertyValueFactory<>("model"));
 
-        TableColumn<Vehicle, String> colorColumn = new TableColumn<>("Cor");
+        TableColumn<Vehicle, String> colorColumn = new TableColumn<>("Color");
         colorColumn.setCellValueFactory(new PropertyValueFactory<>("color"));
 
         tableView.getColumns().addAll(placaColumn, modelColumn, colorColumn);
@@ -65,7 +65,7 @@ public class VehicleClientView {
         vbox.getChildren().add(tableView);
         Scene scene = new Scene(vbox, 400, 300);
         resultStage.setScene(scene);
-        resultStage.setTitle("Resultado da Consulta de Veículos");
+        resultStage.setTitle("Vehicle Query Result");
         resultStage.show();
 
         currentStage.close();

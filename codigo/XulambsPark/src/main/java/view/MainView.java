@@ -91,15 +91,15 @@ public class MainView extends Application {
 
         vbox.getChildren().add(newParkingLotButton);
 
-        Button clientHistoricalButton = new Button("Consultar histórico de cliente");
+        Button clientHistoricalButton = new Button("Consult historical of client");
         clientHistoricalButton.setOnAction(e -> new ClientHistoricalView(new ClientHistoricalController()).show());
         vbox.getChildren().add(clientHistoricalButton);
 
-        Button vehicleClientButton = new Button("Consultar veículos de cliente");
+        Button vehicleClientButton = new Button("Consult client vehicles");
         vehicleClientButton.setOnAction(e -> new VehicleClientView(new VehicleClientController()).show());
         vbox.getChildren().add(vehicleClientButton);
 
-        Button adminButton = new Button("Acessar como administrador");
+        Button adminButton = new Button("Access as administrator");
         adminButton.setOnAction(e -> {
             AdminController adminController = new AdminController();
             AdminView adminView = new AdminView(adminController);

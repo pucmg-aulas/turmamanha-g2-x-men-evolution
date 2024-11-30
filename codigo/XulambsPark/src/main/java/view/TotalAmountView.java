@@ -20,7 +20,7 @@ public class TotalAmountView {
         VBox vbox = new VBox(10);
         vbox.setPadding(new Insets(10));
 
-        Button totalAmountButton = new Button("Consultar arrecadação total");
+        Button totalAmountButton = new Button("Consult total collection");
         Label totalAmountLabel = new Label();
         totalAmountButton.setOnAction(e -> {
             double totalAmount = adminController.getTotalAmountRaised();

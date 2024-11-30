@@ -26,13 +26,13 @@ public class ClientHistoricalView {
         TextField cpfField = new TextField();
         DatePicker startDatePicker = new DatePicker();
         DatePicker endDatePicker = new DatePicker();
-        Button searchButton = new Button("Buscar");
+        Button searchButton = new Button("Search");
         searchButton.setOnAction(event -> showHistorical(stage, cpfField.getText(), startDatePicker.getValue(), endDatePicker.getValue()));
 
-        vbox.getChildren().addAll(new Label(" CPF do Cliente:"), cpfField, new Label(" Data de Início:"), startDatePicker, new Label(" Data de Fim:"), endDatePicker, searchButton);
+        vbox.getChildren().addAll(new Label(" Client CPF:"), cpfField, new Label(" Start Date:"), startDatePicker, new Label(" End Date:"), endDatePicker, searchButton);
         Scene scene = new Scene(vbox, 300, 300);
         stage.setScene(scene);
-        stage.setTitle("Buscar Histórico de Cliente");
+        stage.setTitle("Search Client Historical");
         stage.show();
     }
 
@@ -48,22 +48,22 @@ public class ClientHistoricalView {
             e.printStackTrace();
         }
 
-        TableColumn<ClientHistoricalDAO.ClientHistorical, String> vehiclePlateCol = new TableColumn<>("Placa");
+        TableColumn<ClientHistoricalDAO.ClientHistorical, String> vehiclePlateCol = new TableColumn<>("Plate");
         vehiclePlateCol.setCellValueFactory(new PropertyValueFactory<>("vehiclePlate"));
 
-        TableColumn<ClientHistoricalDAO.ClientHistorical, String> spotIdCol = new TableColumn<>("Vaga");
+        TableColumn<ClientHistoricalDAO.ClientHistorical, String> spotIdCol = new TableColumn<>("Spot");
         spotIdCol.setCellValueFactory(new PropertyValueFactory<>("spotId"));
 
-        TableColumn<ClientHistoricalDAO.ClientHistorical, String> parkingLotNameCol = new TableColumn<>("Estacionamento");
+        TableColumn<ClientHistoricalDAO.ClientHistorical, String> parkingLotNameCol = new TableColumn<>("Parking Lot");
         parkingLotNameCol.setCellValueFactory(new PropertyValueFactory<>("parkingLotName"));
 
-        TableColumn<ClientHistoricalDAO.ClientHistorical, java.sql.Timestamp> startTimeCol = new TableColumn<>("Início");
+        TableColumn<ClientHistoricalDAO.ClientHistorical, java.sql.Timestamp> startTimeCol = new TableColumn<>("Start");
         startTimeCol.setCellValueFactory(new PropertyValueFactory<>("startTime"));
 
-        TableColumn<ClientHistoricalDAO.ClientHistorical, java.sql.Timestamp> endTimeCol = new TableColumn<>("Fim");
+        TableColumn<ClientHistoricalDAO.ClientHistorical, java.sql.Timestamp> endTimeCol = new TableColumn<>("End");
         endTimeCol.setCellValueFactory(new PropertyValueFactory<>("endTime"));
 
-        TableColumn<ClientHistoricalDAO.ClientHistorical, Double> amountPaidCol = new TableColumn<>("Valor Pago");
+        TableColumn<ClientHistoricalDAO.ClientHistorical, Double> amountPaidCol = new TableColumn<>("Amount Paid");
         amountPaidCol.setCellValueFactory(new PropertyValueFactory<>("amountPaid"));
 
         tableView.setItems(data);
@@ -72,7 +72,7 @@ public class ClientHistoricalView {
         vbox.getChildren().add(tableView);
         Scene scene = new Scene(vbox, 800, 400);
         stage.setScene(scene);
-        stage.setTitle("Histórico do Cliente");
+        stage.setTitle("Client Historical");
         stage.show();
     }
 }

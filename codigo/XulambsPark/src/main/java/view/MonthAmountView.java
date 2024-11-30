@@ -25,7 +25,7 @@ public class MonthAmountView {
         monthField.setPromptText("Enter month (1-12)");
         TextField yearField = new TextField();
         yearField.setPromptText("Enter year");
-        Button monthAmountButton = new Button("Consultar arrecadação em um mês");
+        Button monthAmountButton = new Button("Consult collection in a month");
         Label monthAmountLabel = new Label();
         monthAmountButton.setOnAction(e -> {
             int month = Integer.parseInt(monthField.getText());

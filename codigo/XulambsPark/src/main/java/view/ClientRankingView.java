@@ -33,7 +33,7 @@ public class ClientRankingView {
         rankingMonthField.setPromptText("Enter month (1-12)");
         TextField rankingYearField = new TextField();
         rankingYearField.setPromptText("Enter year");
-        Button clientRankingButton = new Button("Consultar ranking de clientes");
+        Button clientRankingButton = new Button("Consult Client Ranking");
 
         clientRankingButton.setOnAction(e -> {
             int month = Integer.parseInt(rankingMonthField.getText());
@@ -64,7 +64,7 @@ public class ClientRankingView {
         TableColumn<ClientRankingDAO.ClientRanking, String> cpfColumn = new TableColumn<>("CPF");
         cpfColumn.setCellValueFactory(new PropertyValueFactory<>("clientCpf"));
 
-        TableColumn<ClientRankingDAO.ClientRanking, Double> totalColumn = new TableColumn<>("Total Arrecadado");
+        TableColumn<ClientRankingDAO.ClientRanking, Double> totalColumn = new TableColumn<>("Total Raised");
         totalColumn.setCellValueFactory(new PropertyValueFactory<>("totalArrecadado"));
 
         tableView.getColumns().addAll(nameColumn, cpfColumn, totalColumn);

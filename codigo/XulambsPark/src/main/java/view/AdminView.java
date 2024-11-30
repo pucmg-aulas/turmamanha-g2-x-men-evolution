@@ -49,22 +49,22 @@ public class AdminView {
         VBox vbox = new VBox(10);
         vbox.setPadding(new Insets(10));
 
-        Button totalAmountButton = new Button("Consultar arrecadação total");
+        Button totalAmountButton = new Button("Consult total collection");
         totalAmountButton.setOnAction(e -> new TotalAmountView(adminController).show());
 
-        Button monthlyAmountButton = new Button("Consultar arrecadação em um mês");
+        Button monthlyAmountButton = new Button("Consult collection in a months");
         monthlyAmountButton.setOnAction(e -> new MonthAmountView(adminController).show());
 
-        Button averageAmountButton = new Button("Consultar valor médio por arrecadação");
+        Button averageAmountButton = new Button("Consult average value per collection");
         averageAmountButton.setOnAction(e -> new AverageAmountView(adminController).show());
 
-        Button clientRankingButton = new Button("Consultar ranking de clientes");
+        Button clientRankingButton = new Button("Consult client ranking");
         clientRankingButton.setOnAction(e -> new ClientRankingView(adminController).show());
 
-        Button mostUsedSpotsButton = new Button("Consultar vagas mais utilizadas");
+        Button mostUsedSpotsButton = new Button("Consult the most used spots");
         mostUsedSpotsButton.setOnAction(e -> new MostUsedSpotsView(adminController).show());
 
-        Button rushHourButton = new Button("Consultar horários mais movimentados");
+        Button rushHourButton = new Button("Consult the most rush hour");
         rushHourButton.setOnAction(e -> new RushHourView(adminController).show());
 
         vbox.getChildren().addAll(totalAmountButton, monthlyAmountButton, averageAmountButton, clientRankingButton, mostUsedSpotsButton, rushHourButton);

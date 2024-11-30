@@ -21,8 +21,8 @@ public class MostUsedSpotsView {
         try {
             adminController.getMostUsedSpots().forEach(spot -> {
                 listView.getItems().add(
-                        "Vaga: " + spot.getSpotId() +
-                                "  ---  Número de ocupações: " + spot.getOcupacoes()
+                        "Spot: " + spot.getSpotId() +
+                                "  ---  Number of occupations: " + spot.getOcupacoes()
                 );
             });
         } catch (Exception e) {
@@ -32,7 +32,7 @@ public class MostUsedSpotsView {
         vbox.getChildren().add(listView);
         Scene scene = new Scene(vbox, 400, 300);
         stage.setScene(scene);
-        stage.setTitle("Vagas Mais Utilizadas");
+        stage.setTitle("Most Used Spots");
         stage.show();
     }
 }

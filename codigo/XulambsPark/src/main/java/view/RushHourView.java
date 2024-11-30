@@ -19,9 +19,9 @@ public class RushHourView {
     public void show() {
         Stage stage = new Stage();
         VBox vbox = new VBox(10);
-        Label label = new Label("  Digite o nome do parque:");
+        Label label = new Label("  Enter the name of the park:");
         TextField parkingLotField = new TextField();
-        Button button = new Button("Mostrar Horários");
+        Button button = new Button("Show timetable");
         ListView<String> listView = new ListView<>();
 
         button.setOnAction(event -> {
@@ -42,7 +42,7 @@ public class RushHourView {
         vbox.getChildren().addAll(label, parkingLotField, button, listView);
         Scene scene = new Scene(vbox, 400, 300);
         stage.setScene(scene);
-        stage.setTitle("Horários Mais Movimentados por Parque");
+        stage.setTitle("Busiest Times per Park");
         stage.show();
     }
 }
