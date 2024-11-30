@@ -9,8 +9,10 @@ import javafx.stage.Stage;
 import model.ParkingLot;
 import model.ParkingSpot;
 import javafx.scene.paint.Color;
-
+import java.util.List;
 import java.util.Map;
+
+import java.util.stream.Collectors;
 
 public class ParkingLotView extends Application {
     private ParkingLotController controller;
@@ -27,10 +29,13 @@ public class ParkingLotView extends Application {
         GridPane gridPane = new GridPane();
 
         ParkingLot parkingLot = controller.getParkingLot(parkingLotName);
+        List<ParkingSpot> sortedSpots = parkingLot.getSpots().values().stream()
+                .sorted((spot1, spot2) -> spot1.getPosition().compareTo(spot2.getPosition()))
+                .collect(Collectors.toList());
+
         int row = 0;
         int col = 0;
-        for (Map.Entry<String, ParkingSpot> entry : parkingLot.getSpots().entrySet()) {
-            ParkingSpot spot = entry.getValue();
+        for (ParkingSpot spot : sortedSpots) {
             Button button = new Button(spot.getPosition());
             button.setStyle("-fx-background-color: " + (spot.isOccupied() ? "red" : toHexString(spot.getType().getColor())));
             button.setOnAction(e -> controller.handleButtonAction(spot, button));
