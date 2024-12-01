@@ -1,9 +1,15 @@
 package view;
 
 import controller.ClientController;
+import javafx.geometry.Insets;
+import javafx.scene.Scene;
 import javafx.scene.control.Alert;
+import javafx.scene.control.Button;
 import javafx.scene.control.ButtonType;
-import javafx.scene.control.TextInputDialog;
+import javafx.scene.control.Label;
+import javafx.scene.control.TextField;
+import javafx.scene.layout.VBox;
+import javafx.stage.Stage;
 import model.Client;
 
 import java.util.Optional;
@@ -63,11 +69,27 @@ public class ClientView {
     }
 
     private String showInputDialog(String message) {
-        TextInputDialog dialog = new TextInputDialog();
-        dialog.setTitle("Input");
-        dialog.setHeaderText(null);
-        dialog.setContentText(message);
-        Optional<String> result = dialog.showAndWait();
-        return result.orElse(null);
+        Stage inputStage = new Stage();
+        VBox vbox = new VBox(10);
+        vbox.setPadding(new Insets(10));
+
+        Label label = new Label(message);
+        TextField textField = new TextField();
+        Button submitButton = new Button("Submit");
+
+        final String[] input = new String[1];
+        submitButton.setOnAction(e -> {
+            input[0] = textField.getText();
+            inputStage.close();
+        });
+
+        vbox.getChildren().addAll(label, textField, submitButton);
+
+        Scene scene = new Scene(vbox, 300, 200);
+        inputStage.setScene(scene);
+        inputStage.setTitle("XulambsPark");
+        inputStage.showAndWait();
+
+        return input[0];
     }
 }
