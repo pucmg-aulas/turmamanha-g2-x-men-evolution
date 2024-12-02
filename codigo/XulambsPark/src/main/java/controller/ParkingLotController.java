@@ -1,4 +1,4 @@
-// Java
+// src/main/java/controller/ParkingLotController.java
 package controller;
 
 import DAO.HistoricalDAO;
@@ -6,6 +6,8 @@ import DAO.ParkingLotDAO;
 import DAO.ParkingSpotDAO;
 import exceptions.ClientRegistrationException;
 import exceptions.ClientRetrievalException;
+import exceptions.VehicleRegistrationException;
+import exceptions.VehicleUpdateException;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.ButtonType;
@@ -68,7 +70,12 @@ public class ParkingLotController {
                             showAlert("Error updating client: " + e.getMessage());
                             return;
                         }
-                        vehicleController.registerVehicle(vehicle);
+                        try {
+                            vehicleController.registerVehicle(vehicle);
+                        } catch (VehicleRegistrationException | VehicleUpdateException e) {
+                            showAlert("Error registering/updating vehicle: " + e.getMessage());
+                            return;
+                        }
                         if (parkVehicle(spot.getId(), vehicle)) {
                             spot.occupy(vehicle);
                             button.setStyle("-fx-background-color: red");

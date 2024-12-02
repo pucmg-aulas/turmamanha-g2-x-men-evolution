@@ -1,6 +1,8 @@
+// src/main/java/view/VehicleView.java
 package view;
 
 import controller.VehicleController;
+import exceptions.VehicleNotFoundException;
 import javafx.geometry.Insets;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
@@ -22,9 +24,13 @@ public class VehicleView {
     }
 
     public Vehicle showAdditionalInfo(String placa, String owner, String cpf) {
-        Vehicle existingVehicle = vehicleController.getVehicleByPlaca(placa);
-        if (existingVehicle != null) {
-            return existingVehicle;
+        try {
+            Vehicle existingVehicle = vehicleController.getVehicleByPlaca(placa);
+            if (existingVehicle != null) {
+                return existingVehicle;
+            }
+        } catch (VehicleNotFoundException e) {
+            showAlert("Vehicle not found: " + e.getMessage());
         }
 
         boolean addAdditionalInfo = showConfirmDialog("Do you want to add additional vehicle information?", "Yes", "No");
