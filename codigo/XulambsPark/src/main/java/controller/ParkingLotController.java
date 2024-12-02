@@ -1,8 +1,11 @@
+// Java
 package controller;
 
 import DAO.HistoricalDAO;
 import DAO.ParkingLotDAO;
 import DAO.ParkingSpotDAO;
+import exceptions.ClientRegistrationException;
+import exceptions.ClientRetrievalException;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.ButtonType;
@@ -59,7 +62,12 @@ public class ParkingLotController {
                     Vehicle vehicle = new VehicleView(vehicleController).showAdditionalInfo(placa, client.getName(), client.getCpf());
                     if (vehicle != null) {
                         client.addVehicle(vehicle);
-                        clientController.updateClient(client);
+                        try {
+                            clientController.updateClient(client);
+                        } catch (ClientRegistrationException e) {
+                            showAlert("Error updating client: " + e.getMessage());
+                            return;
+                        }
                         vehicleController.registerVehicle(vehicle);
                         if (parkVehicle(spot.getId(), vehicle)) {
                             spot.occupy(vehicle);
@@ -182,11 +190,20 @@ public class ParkingLotController {
     }
 
     public Client getClientByName(String name) {
-        return clientController.getClientByName(name);
+        try {
+            return clientController.getClientByName(name);
+        } catch (ClientRetrievalException e) {
+            showAlert("Error retrieving client by name: " + e.getMessage());
+            return null;
+        }
     }
 
     public void registerClient(String name, String cpf, boolean isAnonymous) {
-        clientController.registerClient(name, cpf, isAnonymous);
+        try {
+            clientController.registerClient(name, cpf, isAnonymous);
+        } catch (ClientRegistrationException e) {
+            showAlert("Error registering client: " + e.getMessage());
+        }
     }
 
     private String toHexString(Color color) {

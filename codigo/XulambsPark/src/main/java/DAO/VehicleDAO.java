@@ -1,6 +1,8 @@
 // src/main/java/DAO/VehicleDAO.java
 package DAO;
 
+import exceptions.VehicleRegistrationException;
+import exceptions.VehicleUpdateException;
 import model.Vehicle;
 import util.DatabaseUtil;
 
@@ -10,7 +12,7 @@ import java.util.List;
 
 public class VehicleDAO {
 
-    public void save(Vehicle vehicle) {
+    public void save(Vehicle vehicle) throws VehicleRegistrationException {
         String sql = "INSERT INTO vehicles (placa, model, color, owner, cpf) VALUES (?, ?, ?, ?, ?)";
 
         try (Connection conn = DatabaseUtil.getConnection();
@@ -24,11 +26,11 @@ public class VehicleDAO {
             stmt.executeUpdate();
 
         } catch (SQLException e) {
-            e.printStackTrace();
+            throw new VehicleRegistrationException("Error saving vehicle: " + vehicle.getPlaca(), e);
         }
     }
 
-    public void update(Vehicle vehicle) {
+    public void update(Vehicle vehicle) throws VehicleUpdateException {
         String sql = "UPDATE vehicles SET model = ?, color = ?, owner = ?, cpf = ? WHERE placa = ?";
 
         try (Connection conn = DatabaseUtil.getConnection();
@@ -42,7 +44,7 @@ public class VehicleDAO {
             stmt.executeUpdate();
 
         } catch (SQLException e) {
-            e.printStackTrace();
+            throw new VehicleUpdateException("Error updating vehicle: " + vehicle.getPlaca(), e);
         }
     }
 
