@@ -1,11 +1,9 @@
-// src/main/java/controller/ParkingLotController.java
 package controller;
 
 import DAO.HistoricalDAO;
 import DAO.ParkingLotDAO;
 import DAO.ParkingSpotDAO;
 import exceptions.ClientRegistrationException;
-import exceptions.ClientRetrievalException;
 import exceptions.VehicleRegistrationException;
 import exceptions.VehicleUpdateException;
 import javafx.scene.control.Alert;
@@ -39,7 +37,7 @@ public class ParkingLotController {
         this.parkingLots = new LinkedHashMap<>(this.parkingLotDAO.findAll());
         this.clientController = new ClientController();
         this.vehicleController = new VehicleController();
-        this.parkingSpotController = new ParkingSpotController(); // Initialize the ParkingSpotController
+        this.parkingSpotController = new ParkingSpotController();
     }
 
     public void registerParkingLot(String name, Map<String, SpotType> spots) {
@@ -101,7 +99,6 @@ public class ParkingLotController {
         } else {
             boolean confirm = showConfirmDialog("Vacate this spot?");
             if (confirm) {
-                // Retrieve the updated ParkingSpot from the database
                 ParkingSpot updatedSpot = parkingSpotController.findParkingSpotById(spot.getId());
                 LocalDateTime endTime = LocalDateTime.now();
                 double valor = parkingSpotController.calcularTarifa(updatedSpot.getId(), endTime);
@@ -153,11 +150,6 @@ public class ParkingLotController {
         alert.showAndWait();
     }
 
-    public void addParkingLot(String name, int numberOfSpots, SpotType tipoVaga) {
-        ParkingLot parkingLot = new ParkingLot(name, numberOfSpots, tipoVaga);
-        parkingLots.put(name, parkingLot);
-        parkingLotDAO.save(parkingLot);
-    }
 
     public ParkingLot getParkingLot(String name) {
         return parkingLots.get(name);
@@ -167,17 +159,12 @@ public class ParkingLotController {
         return parkingLots.keySet();
     }
 
-    public ParkingSpot getSpot(String parkingLotName, String spotId) {
-        ParkingLot parkingLot = parkingLots.get(parkingLotName);
-        return parkingLot != null ? parkingLot.getSpot(spotId) : null;
-    }
-
     public boolean parkVehicle(String spotId, Vehicle vehicle) {
         for (ParkingLot parkingLot : parkingLots.values()) {
             ParkingSpot spot = parkingLot.getSpot(spotId);
             if (spot != null && !spot.isOccupied()) {
                 spot.occupy(vehicle);
-                parkingSpotDAO.save(spot); // Save the spot to the database
+                parkingSpotDAO.save(spot);
                 return true;
             }
         }
@@ -189,29 +176,13 @@ public class ParkingLotController {
             ParkingSpot spot = parkingLot.getSpot(spotId);
             if (spot != null && spot.isOccupied()) {
                 spot.vacate();
-                parkingSpotDAO.save(spot); // Update the spot in the database
+                parkingSpotDAO.save(spot);
                 return true;
             }
         }
         return false;
     }
 
-    public Client getClientByName(String name) {
-        try {
-            return clientController.getClientByName(name);
-        } catch (ClientRetrievalException e) {
-            showAlert("Error retrieving client by name: " + e.getMessage());
-            return null;
-        }
-    }
-
-    public void registerClient(String name, String cpf, boolean isAnonymous) {
-        try {
-            clientController.registerClient(name, cpf, isAnonymous);
-        } catch (ClientRegistrationException e) {
-            showAlert("Error registering client: " + e.getMessage());
-        }
-    }
 
     private String toHexString(Color color) {
         return String.format("#%02X%02X%02X",
