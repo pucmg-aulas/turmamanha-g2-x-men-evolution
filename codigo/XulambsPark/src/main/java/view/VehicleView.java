@@ -10,8 +10,6 @@ import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 import model.Vehicle;
 
-import java.util.Optional;
-
 public class VehicleView {
     private VehicleController vehicleController;
 
@@ -30,34 +28,19 @@ public class VehicleView {
                 return existingVehicle;
             }
         } catch (VehicleNotFoundException e) {
-            showAlert("Vehicle not found: " + e.getMessage());
+            // Do nothing if vehicle is not found
         }
 
-        boolean addAdditionalInfo = showConfirmDialog("Do you want to add additional vehicle information?", "Yes", "No");
-        if (addAdditionalInfo) {
-            String model = showInputDialog("Enter vehicle model:");
-            String color = showInputDialog("Enter vehicle color:");
+        String model = showInputDialog("Enter vehicle model:");
+        String color = showInputDialog("Enter vehicle color:");
 
-            if (model != null && !model.trim().isEmpty() &&
-                    color != null && !color.trim().isEmpty()) {
-                return new Vehicle(placa, model, color, owner, cpf);
-            }
+        if (model != null && !model.trim().isEmpty() &&
+                color != null && !color.trim().isEmpty()) {
+            return new Vehicle(placa, model, color, owner, cpf);
+        } else {
+            showAlert("Model and color are required.");
+            return showAdditionalInfo(placa, owner, cpf); // Retry until valid input is provided
         }
-        return new Vehicle(placa, "", "", owner, cpf);
-    }
-
-    private boolean showConfirmDialog(String message, String positiveButtonText, String negativeButtonText) {
-        Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
-        alert.setTitle("Confirmation");
-        alert.setHeaderText(null);
-        alert.setContentText(message);
-
-        ButtonType positiveButton = new ButtonType(positiveButtonText);
-        ButtonType negativeButton = new ButtonType(negativeButtonText);
-        alert.getButtonTypes().setAll(positiveButton, negativeButton);
-
-        Optional<ButtonType> result = alert.showAndWait();
-        return result.isPresent() && result.get() == positiveButton;
     }
 
     private void showAlert(String message) {
