@@ -4,7 +4,10 @@ import controller.ParkingLotController;
 import javafx.application.Application;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
+import javafx.scene.control.Label;
 import javafx.scene.layout.GridPane;
+import javafx.scene.layout.HBox;
+import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 import model.ParkingLot;
 import model.ParkingSpot;
@@ -27,6 +30,8 @@ public class ParkingLotView extends Application {
     public void start(Stage primaryStage) {
         primaryStage.setTitle("Parking Lot: " + parkingLotName);
         GridPane gridPane = new GridPane();
+        gridPane.setHgap(10); // Espaçamento horizontal entre as vagas
+        gridPane.setVgap(10); // Espaçamento vertical entre as vagas
 
         ParkingLot parkingLot = controller.getParkingLot(parkingLotName);
         List<ParkingSpot> sortedSpots = parkingLot.getSpots().values().stream()
@@ -39,6 +44,8 @@ public class ParkingLotView extends Application {
             Button button = new Button(spot.getPosition());
             button.setStyle("-fx-background-color: " + (spot.isOccupied() ? "red" : toHexString(spot.getType().getColor())));
             button.setOnAction(e -> controller.handleButtonAction(spot, button));
+            button.setPrefWidth(100); // Define a largura preferida
+            button.setPrefHeight(100); // Define a altura preferida
             gridPane.add(button, col, row);
             col++;
             if (col == 10) {
@@ -47,7 +54,33 @@ public class ParkingLotView extends Application {
             }
         }
 
-        Scene scene = new Scene(gridPane, 800, 600);
+        Label legendLabel = new Label("Legenda:");
+        legendLabel.setStyle("-fx-padding: 5px;");
+
+        Label occupiedLabel = new Label("Ocupado");
+        occupiedLabel.setStyle("-fx-background-color: red; -fx-text-fill: white; -fx-padding: 5px;");
+
+        Label regularLabel = new Label("Regular");
+        regularLabel.setStyle("-fx-background-color: " + toHexString(Color.WHITE) + "; -fx-text-fill: black; -fx-padding: 5px;");
+
+        Label idosoLabel = new Label("Idoso");
+        idosoLabel.setStyle("-fx-background-color: " + toHexString(Color.YELLOW) + "; -fx-text-fill: black; -fx-padding: 5px;");
+
+        Label pcdLabel = new Label("PCD");
+        pcdLabel.setStyle("-fx-background-color: " + toHexString(Color.LIGHTGREEN) + "; -fx-text-fill: black; -fx-padding: 5px;");
+
+        Label vipLabel = new Label("VIP");
+        vipLabel.setStyle("-fx-background-color: " + toHexString(Color.MAGENTA) + "; -fx-text-fill: white; -fx-padding: 5px;");
+
+        HBox legendBox = new HBox();
+        legendBox.setSpacing(10);
+        legendBox.getChildren().addAll(legendLabel, occupiedLabel, regularLabel, idosoLabel, pcdLabel, vipLabel);
+
+        VBox mainLayout = new VBox();
+        mainLayout.setSpacing(20);
+        mainLayout.getChildren().addAll(gridPane, legendBox);
+
+        Scene scene = new Scene(mainLayout, 800, 600);
         primaryStage.setScene(scene);
         primaryStage.show();
     }
