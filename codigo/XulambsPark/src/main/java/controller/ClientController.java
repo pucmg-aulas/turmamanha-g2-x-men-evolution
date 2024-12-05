@@ -84,23 +84,18 @@ public class ClientController {
         }
     }
 
+    // Java
     public Client handleClientInteraction(ClientView view) {
         try {
-            boolean isExistingClient = view.showConfirmDialog("Is this vehicle associated with an existing client?", "Yes", "No");
-            if (isExistingClient) {
-                String clientCpf = view.showInputDialog("Enter client CPF:");
-                return getClientByCpf(clientCpf);
+            boolean registerNewClient = view.showConfirmDialog("Do you want to register a new client?", "Yes", "No");
+            if (registerNewClient) {
+                String name = view.showInputDialog("Enter client name:");
+                String cpf = view.showInputDialog("Enter client CPF:");
+                registerClient(name, cpf, false);
+                return getClientByCpf(cpf);
             } else {
-                boolean registerNewClient = view.showConfirmDialog("Do you want to register a new client?", "Yes", "No");
-                if (registerNewClient) {
-                    String name = view.showInputDialog("Enter client name:");
-                    String cpf = view.showInputDialog("Enter client CPF:");
-                    registerClient(name, cpf, false);
-                    return getClientByCpf(cpf);
-                } else {
-                    registerClient("Anonymous", "", true);
-                    return getClientByName("Anonymous");
-                }
+                registerClient("Anonymous", "", true);
+                return getClientByName("Anonymous");
             }
         } catch (ClientRetrievalException | ClientRegistrationException e) {
             view.showAlert(e.getMessage());

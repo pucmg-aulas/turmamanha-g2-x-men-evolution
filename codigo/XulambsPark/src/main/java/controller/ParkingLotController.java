@@ -4,6 +4,7 @@ import DAO.HistoricalDAO;
 import DAO.ParkingLotDAO;
 import DAO.ParkingSpotDAO;
 import exceptions.ClientRegistrationException;
+import exceptions.VehicleNotFoundException;
 import exceptions.VehicleRegistrationException;
 import exceptions.VehicleUpdateException;
 import javafx.scene.control.Alert;
@@ -53,46 +54,57 @@ public class ParkingLotController {
         System.out.println("Parking lot registered: " + name);
     }
 
+
     public void handleButtonAction(ParkingSpot spot, Button button) {
         if (!spot.isOccupied()) {
             String placa = new VehicleView(vehicleController).showPlateInputDialog();
             if (placa != null && !placa.trim().isEmpty()) {
-                Client client = new ClientView(clientController).show();
-                if (client != null) {
-                    Vehicle vehicle = new VehicleView(vehicleController).showAdditionalInfo(placa, client.getName(), client.getCpf());
-                    if (vehicle != null) {
-                        client.addVehicle(vehicle);
-                        try {
-                            clientController.updateClient(client);
-                        } catch (ClientRegistrationException e) {
-                            showAlert("Error updating client: " + e.getMessage());
-                            return;
+                Vehicle vehicle = null;
+                try {
+                    vehicle = vehicleController.getVehicleByPlaca(placa);
+                } catch (VehicleNotFoundException e) {
+                    // Vehicle not found, ask user if they want to register or enter as anonymous
+                    Client client = new ClientView(clientController).show();
+                    if (client != null) {
+                        vehicle = new VehicleView(vehicleController).showAdditionalInfo(placa, client.getName(), client.getCpf());
+                        if (vehicle != null) {
+                            client.addVehicle(vehicle);
+                            try {
+                                clientController.updateClient(client);
+                            } catch (ClientRegistrationException ex) {
+                                showAlert("Error updating client: " + ex.getMessage());
+                                return;
+                            }
+                            try {
+                                vehicleController.registerVehicle(vehicle);
+                            } catch (VehicleRegistrationException | VehicleUpdateException ex) {
+                                showAlert("Error registering/updating vehicle: " + ex.getMessage());
+                                return;
+                            }
                         }
-                        try {
-                            vehicleController.registerVehicle(vehicle);
-                        } catch (VehicleRegistrationException | VehicleUpdateException e) {
-                            showAlert("Error registering/updating vehicle: " + e.getMessage());
-                            return;
-                        }
-                        if (parkVehicle(spot.getId(), vehicle)) {
-                            spot.occupy(vehicle);
-                            button.setStyle("-fx-background-color: red");
-                            parkingSpotDAO.save(spot);
+                    }
+                }
 
-                            Historical historical = new Historical(
-                                    vehicle.getCpf(),
-                                    vehicle.getOwner(),
-                                    vehicle.getPlaca(),
-                                    spot.getId(),
-                                    getParkingLotNameBySpotId(spot.getId()),
-                                    spot.getStartTime(),
-                                    null,
-                                    0.0
-                            );
-                            historicalDAO.save(historical);
-                        } else {
-                            showAlert("Failed to park vehicle.");
-                        }
+                if (vehicle != null) {
+                    // Vehicle is already registered or newly registered, park it directly
+                    if (parkVehicle(spot.getId(), vehicle)) {
+                        spot.occupy(vehicle);
+                        button.setStyle("-fx-background-color: red");
+                        parkingSpotDAO.save(spot);
+
+                        Historical historical = new Historical(
+                                vehicle.getCpf(),
+                                vehicle.getOwner(),
+                                vehicle.getPlaca(),
+                                spot.getId(),
+                                getParkingLotNameBySpotId(spot.getId()),
+                                spot.getStartTime(),
+                                null,
+                                0.0
+                        );
+                        historicalDAO.save(historical);
+                    } else {
+                        showAlert("Failed to park vehicle.");
                     }
                 }
             }
