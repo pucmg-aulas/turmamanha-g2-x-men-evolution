@@ -38,59 +38,6 @@ public class MainView extends Application {
             vbox.getChildren().add(button);
         }
 
-        Button newParkingLotButton = new Button("Create New Parking Lot");
-        newParkingLotButton.setOnAction(e -> {
-            TextInputDialog nameDialog = new TextInputDialog();
-            nameDialog.setTitle("New Parking Lot");
-            nameDialog.setHeaderText(null);
-            nameDialog.setContentText("Enter parking lot name:");
-
-            Optional<String> nameResult = nameDialog.showAndWait();
-            nameResult.ifPresent(name -> {
-                Map<String, SpotType> spots = new LinkedHashMap<>();
-                boolean addMoreSpots = true;
-                final int[] spotCounter = {0};
-
-                while (addMoreSpots) {
-                    TextInputDialog spotsDialog = new TextInputDialog();
-                    spotsDialog.setTitle("Number of Spots");
-                    spotsDialog.setHeaderText(null);
-                    spotsDialog.setContentText("Enter number of spots:");
-
-                    Optional<String> spotsResult = spotsDialog.showAndWait();
-                    spotsResult.ifPresent(spotsStr -> {
-                        int numberOfSpots = Integer.parseInt(spotsStr);
-
-                        List<SpotType> spotTypes = Arrays.asList(SpotType.values());
-                        ChoiceDialog<SpotType> typeDialog = new ChoiceDialog<>(SpotType.REGULAR, spotTypes);
-                        typeDialog.setTitle("Spot Type");
-                        typeDialog.setHeaderText(null);
-                        typeDialog.setContentText("Choose spot type:");
-
-                        Optional<SpotType> typeResult = typeDialog.showAndWait();
-                        typeResult.ifPresent(type -> {
-                            for (int i = 0; i < numberOfSpots; i++) {
-                                String spotId = generateSpotId(spotCounter[0]++);
-                                spots.put(spotId, type);
-                            }
-                        });
-                    });
-
-                    Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
-                    alert.setTitle("Add More Spots");
-                    alert.setHeaderText(null);
-                    alert.setContentText("Do you want to add more spots?");
-                    Optional<ButtonType> result = alert.showAndWait();
-                    addMoreSpots = result.isPresent() && result.get() == ButtonType.OK;
-                }
-
-                controller.registerParkingLot(name, spots);
-                vbox.getChildren().add(new Button(name));
-            });
-        });
-
-        vbox.getChildren().add(newParkingLotButton);
-
         Button clientHistoricalButton = new Button("Consult historical of client");
         clientHistoricalButton.setOnAction(e -> new ClientHistoricalView(new ClientHistoricalController()).show());
         vbox.getChildren().add(clientHistoricalButton);

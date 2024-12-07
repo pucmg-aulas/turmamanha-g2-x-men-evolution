@@ -54,7 +54,6 @@ public class ParkingLotController {
         System.out.println("Parking lot registered: " + name);
     }
 
-
     public void handleButtonAction(ParkingSpot spot, Button button) {
         if (!spot.isOccupied()) {
             String placa = new VehicleView(vehicleController).showPlateInputDialog();
