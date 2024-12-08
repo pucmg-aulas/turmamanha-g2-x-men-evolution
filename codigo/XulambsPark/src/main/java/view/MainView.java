@@ -7,17 +7,10 @@ import controller.VehicleClientController;
 import javafx.application.Application;
 import javafx.geometry.Insets;
 import javafx.scene.Scene;
-import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
-import javafx.scene.control.ButtonType;
-import javafx.scene.control.ChoiceDialog;
-import javafx.scene.control.TextInputDialog;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
-import model.SpotType;
 import util.DatabaseUtil;
-
-import java.util.*;
 
 public class MainView extends Application {
     private ParkingLotController controller;
@@ -32,7 +25,7 @@ public class MainView extends Application {
         VBox vbox = new VBox(10);
         vbox.setPadding(new Insets(10));
 
-        for (String parkingLotName : controller.getParkingLots()) {
+        for (String parkingLotName : controller.getParkingLots().keySet()) {
             Button button = new Button(parkingLotName);
             button.setOnAction(e -> new ParkingLotView(controller, parkingLotName).start(new Stage()));
             vbox.getChildren().add(button);
@@ -58,12 +51,6 @@ public class MainView extends Application {
         Scene scene = new Scene(vbox, 400, 300);
         primaryStage.setScene(scene);
         primaryStage.show();
-    }
-
-    private String generateSpotId(int counter) {
-        char letter = (char) ('A' + counter / 6);
-        int number = counter % 6;
-        return String.format("%c%d", letter, number);
     }
 
     public static void main(String[] args) {

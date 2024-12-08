@@ -1,4 +1,3 @@
-// src/main/java/model/ParkingSpot.java
 package model;
 
 import java.time.LocalDateTime;
@@ -7,13 +6,15 @@ public class ParkingSpot {
     private String id;
     private String position;
     private SpotType type;
+    private ITipoVaga tipoVaga;
     private Vehicle vehicle;
     private LocalDateTime startTime;
 
-    public ParkingSpot(String id, String position, SpotType type) {
+    public ParkingSpot(String id, String position, SpotType type, ITipoVaga tipoVaga) {
         this.id = id;
         this.position = position;
         this.type = type;
+        this.tipoVaga = tipoVaga;
         this.vehicle = null;
         this.startTime = null;
     }
@@ -28,6 +29,10 @@ public class ParkingSpot {
 
     public SpotType getType() {
         return type;
+    }
+
+    public ITipoVaga getTipoVaga() {
+        return tipoVaga;
     }
 
     public boolean isOccupied() {

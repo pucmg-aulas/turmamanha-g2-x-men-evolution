@@ -2,6 +2,7 @@ package controller;
 
 import DAO.ParkingSpotDAO;
 import model.ParkingSpot;
+import model.Vehicle;
 
 import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
@@ -37,22 +38,28 @@ public class ParkingSpotController {
             double tarifaBase = 4.0 * Math.ceil(minutes / 15.0);
             tarifaBase = Math.min(tarifaBase, 50.0);
 
-            switch (spot.getType()) {
-                case REGULAR:
-                    break;
-                case VIP:
-                    tarifaBase *= 1.2;
-                    break;
-                case IDOSO:
-                    tarifaBase *= 0.8;
-                    break;
-                case PCD:
-                    tarifaBase *= 0.7;
-                    break;
-            }
-
-            return tarifaBase;
+            return spot.getTipoVaga().calcularTarifa(tarifaBase);
         }
         return 0;
+    }
+
+    public boolean parkVehicle(String spotId, Vehicle vehicle) {
+        ParkingSpot spot = parkingSpotDAO.findById(spotId);
+        if (spot != null && !spot.isOccupied()) {
+            spot.occupy(vehicle);
+            parkingSpotDAO.save(spot);
+            return true;
+        }
+        return false;
+    }
+
+    public boolean vacateSpot(String spotId) {
+        ParkingSpot spot = parkingSpotDAO.findById(spotId);
+        if (spot != null && spot.isOccupied()) {
+            spot.vacate();
+            parkingSpotDAO.save(spot);
+            return true;
+        }
+        return false;
     }
 }

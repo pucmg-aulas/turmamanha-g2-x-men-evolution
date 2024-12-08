@@ -1,9 +1,6 @@
 package DAO;
 
-import model.ParkingLot;
-import model.ParkingSpot;
-import model.SpotType;
-import model.Vehicle;
+import model.*;
 import util.DatabaseUtil;
 
 import java.sql.*;
@@ -32,7 +29,8 @@ public class ParkingLotDAO {
                         String spotId = spotRs.getString("id");
                         String position = spotRs.getString("position");
                         SpotType type = SpotType.valueOf(spotRs.getString("type").toUpperCase());
-                        ParkingSpot spot = new ParkingSpot(spotId, position, type);
+                        ITipoVaga tipoVaga = convertSpotTypeToITipoVaga(type);
+                        ParkingSpot spot = new ParkingSpot(spotId, position, type, tipoVaga);
                         String vehiclePlaca = spotRs.getString("vehicle_placa");
                         if (vehiclePlaca != null) {
                             Vehicle vehicle = new Vehicle(vehiclePlaca, "", "", "", "");
@@ -46,6 +44,20 @@ public class ParkingLotDAO {
             }
         } catch (SQLException e) {
             e.printStackTrace();
+        }
+    }
+
+    private ITipoVaga convertSpotTypeToITipoVaga(SpotType type) {
+        switch (type) {
+            case IDOSO:
+                return new VagaIdoso();
+            case PCD:
+                return new VagaPCD();
+            case VIP:
+                return new VagaVIP();
+            case REGULAR:
+            default:
+                return new VagaRegular();
         }
     }
 

@@ -45,7 +45,7 @@ public class ParkingLotView extends Application {
             button.setStyle("-fx-background-color: " + (spot.isOccupied() ? "red" : toHexString(spot.getType().getColor())));
             button.setOnAction(e -> controller.handleButtonAction(spot, button));
             button.setPrefWidth(100); // Define a largura preferida
-            button.setPrefHeight(100); // Define a altura preferida
+            button.setPrefHeight(100);
             gridPane.add(button, col, row);
             col++;
             if (col == 10) {

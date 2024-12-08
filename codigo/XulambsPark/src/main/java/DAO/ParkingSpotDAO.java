@@ -1,8 +1,6 @@
 package DAO;
 
-import model.ParkingSpot;
-import model.SpotType;
-import model.Vehicle;
+import model.*;
 import util.DatabaseUtil;
 
 import java.sql.*;
@@ -45,7 +43,8 @@ public class ParkingSpotDAO {
                 String type = rs.getString("type");
                 String vehiclePlaca = rs.getString("vehicle_placa");
                 Timestamp startTime = rs.getTimestamp("start_time");
-                parkingSpot = new ParkingSpot(id, position, SpotType.valueOf(type.toUpperCase()));
+                ITipoVaga tipoVaga = convertSpotTypeToITipoVaga(SpotType.valueOf(type.toUpperCase()));
+                parkingSpot = new ParkingSpot(id, position, SpotType.valueOf(type.toUpperCase()), tipoVaga);
                 if (vehiclePlaca != null) {
                     parkingSpot.occupy(new Vehicle(vehiclePlaca, "", "", "", ""));
                 }
@@ -74,7 +73,8 @@ public class ParkingSpotDAO {
                 String type = rs.getString("type");
                 String vehiclePlaca = rs.getString("vehicle_placa");
                 Timestamp startTime = rs.getTimestamp("start_time");
-                ParkingSpot parkingSpot = new ParkingSpot(id, position, SpotType.valueOf(type.toUpperCase()));
+                ITipoVaga tipoVaga = convertSpotTypeToITipoVaga(SpotType.valueOf(type.toUpperCase()));
+                ParkingSpot parkingSpot = new ParkingSpot(id, position, SpotType.valueOf(type.toUpperCase()), tipoVaga);
                 if (vehiclePlaca != null) {
                     parkingSpot.occupy(new Vehicle(vehiclePlaca, "", "", "", ""));
                 }
@@ -101,6 +101,20 @@ public class ParkingSpotDAO {
 
         } catch (SQLException e) {
             e.printStackTrace();
+        }
+    }
+
+    private ITipoVaga convertSpotTypeToITipoVaga(SpotType type) {
+        switch (type) {
+            case IDOSO:
+                return new VagaIdoso();
+            case PCD:
+                return new VagaPCD();
+            case VIP:
+                return new VagaVIP();
+            case REGULAR:
+            default:
+                return new VagaRegular();
         }
     }
 }
