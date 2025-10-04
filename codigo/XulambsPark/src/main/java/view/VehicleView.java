@@ -5,12 +5,17 @@ import controller.VehicleController;
 import exceptions.VehicleNotFoundException;
 import javafx.geometry.Insets;
 import javafx.scene.Scene;
-import javafx.scene.control.*;
+import javafx.scene.control.Alert;
+import javafx.scene.control.Button;
+import javafx.scene.control.Label;
+import javafx.scene.control.TextField;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 import model.Vehicle;
 
 public class VehicleView {
+    // Problemas de arquitetura 15 VehicleView linha 15- View com lógica de validação e controle de fluxo, essa responsabilidade deveria ser do Controller ou de um Presenter
+
     private VehicleController vehicleController;
 
     public VehicleView(VehicleController vehicleController) {
@@ -20,6 +25,7 @@ public class VehicleView {
     public String showPlateInputDialog() {
         return showInputDialog("Enter vehicle plate:");
     }
+// Problemas de arquitetura 19 VehicleView linha 45- Método recursivo showAdditionalInfo para retry de input, pode causar overflow e dificulta tratamento de erro, seria recomendado usar loop
 
     public Vehicle showAdditionalInfo(String placa, String owner, String cpf) {
         try {

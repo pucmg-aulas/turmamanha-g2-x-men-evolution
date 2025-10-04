@@ -1,5 +1,9 @@
 package controller;
 
+import java.time.LocalDateTime;
+import java.util.LinkedHashMap;
+import java.util.Map;
+
 import DAO.HistoricalDAO;
 import DAO.ParkingLotDAO;
 import exceptions.ClientRegistrationException;
@@ -8,16 +12,17 @@ import exceptions.VehicleNotFoundException;
 import exceptions.VehicleRegistrationException;
 import exceptions.VehicleUpdateException;
 import javafx.scene.control.Button;
-import model.*;
+import model.Client;
+import model.Historical;
+import model.ParkingLot;
+import model.ParkingSpot;
+import model.Vehicle;
 import util.ColorUtils;
 import util.DialogUtils;
 import view.ClientView;
 import view.VehicleView;
 
-import java.time.LocalDateTime;
-import java.util.LinkedHashMap;
-import java.util.Map;
-
+//Problemas de arquitetura 4- Controller se comunica diretamente com Dao, deveria ser através de uma camada de serviço ou repositório, seria recomendado criar uma camada de serviço para mediar essa comunicação
 public class ParkingLotController {
     private Map<String, ParkingLot> parkingLots;
     private ParkingLotDAO parkingLotDAO;
@@ -44,6 +49,7 @@ public class ParkingLotController {
         return parkingLots.get(name);
     }
 
+    // Problemas de arquitetura 2- Controller não deve ter lógica de interface gráfica, essa responsabilidade deveria ser da View
     public void handleButtonAction(ParkingSpot spot, Button button) {
         if (!spot.isOccupied()) {
             String placa = new VehicleView(vehicleController).showPlateInputDialog();
@@ -81,7 +87,7 @@ public class ParkingLotController {
             }
         }
     }
-
+//Problemas de arquitetura 3- Controller não deve ter regra de negócio, essa responsabilidade deveria ser de uma camada de serviço
     private void parkVehicle(ParkingSpot spot, Button button, Vehicle vehicle, Client client) {
         client.addVehicle(vehicle);
         try {

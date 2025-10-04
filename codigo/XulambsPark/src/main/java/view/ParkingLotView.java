@@ -1,5 +1,8 @@
 package view;
 
+import java.util.List;
+import java.util.stream.Collectors;
+
 import controller.ParkingLotController;
 import javafx.application.Application;
 import javafx.scene.Scene;
@@ -8,19 +11,16 @@ import javafx.scene.control.Label;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
+import javafx.scene.paint.Color;
 import javafx.stage.Stage;
 import model.ParkingLot;
 import model.ParkingSpot;
-import javafx.scene.paint.Color;
-import java.util.List;
-import java.util.Map;
-
-import java.util.stream.Collectors;
 
 public class ParkingLotView extends Application {
     private ParkingLotController controller;
     private String parkingLotName;
 
+    //Problemas de arquitetura 7 - View está muito acoplada ao Controller, seria recomendado usar um padrão de injeção de dependência ou um framework MVVM
     public ParkingLotView(ParkingLotController controller, String parkingLotName) {
         this.controller = controller;
         this.parkingLotName = parkingLotName;

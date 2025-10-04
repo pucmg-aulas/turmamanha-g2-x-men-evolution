@@ -1,11 +1,23 @@
 package DAO;
 
-import model.*;
-import util.DatabaseUtil;
-
-import java.sql.*;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
+import java.sql.Timestamp;
 import java.util.HashMap;
 import java.util.Map;
+
+import model.ITipoVaga;
+import model.ParkingSpot;
+import model.SpotType;
+import model.VagaIdoso;
+import model.VagaPCD;
+import model.VagaRegular;
+import model.VagaVIP;
+import model.Vehicle;
+import util.DatabaseUtil;
 
 public class ParkingSpotDAO {
 
@@ -58,7 +70,7 @@ public class ParkingSpotDAO {
         }
         return parkingSpot;
     }
-
+// Problemas de arquitetura 5 ParkingLotDAO linha 74- padrão DAO não pode ter lógica de negócio interna, seria recomendado criar uma factory para dividir essa responsabilidade e respeitar os padrões de baixo acoplamento do MVC
     public Map<String, ParkingSpot> findAll() {
         String sql = "SELECT * FROM parking_spots";
         Map<String, ParkingSpot> parkingSpots = new HashMap<>();
@@ -103,7 +115,7 @@ public class ParkingSpotDAO {
             e.printStackTrace();
         }
     }
-
+//Problemas de arquitetura 1- padrão DAO não pode ter lógica de negócio interna, seria recomendado criar uma factory para dividir essa responsabilidade
     private ITipoVaga convertSpotTypeToITipoVaga(SpotType type) {
         switch (type) {
             case IDOSO:

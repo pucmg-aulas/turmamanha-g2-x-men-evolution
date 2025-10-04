@@ -1,16 +1,21 @@
 package view;
 
-import controller.ClientHistoricalController;
+import java.time.LocalDate;
+
 import DAO.ClientHistoricalDAO;
+import controller.ClientHistoricalController;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.scene.Scene;
-import javafx.scene.control.*;
+import javafx.scene.control.Button;
+import javafx.scene.control.DatePicker;
+import javafx.scene.control.Label;
+import javafx.scene.control.TableColumn;
+import javafx.scene.control.TableView;
+import javafx.scene.control.TextField;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
-
-import java.time.LocalDate;
 
 public class ClientHistoricalView {
     private ClientHistoricalController clientHistoricalController;
@@ -35,6 +40,7 @@ public class ClientHistoricalView {
         stage.setTitle("Search Client Historical");
         stage.show();
     }
+// Problemas de arquitetura 14 ClientHistoricalView linha 39- View fazendo chamadas diretas para o DAO através do Controller, aumentando acoplamento entre camadas
 
     private void showHistorical(Stage stage, String clientCpf, LocalDate startDate, LocalDate endDate) {
         VBox vbox = new VBox(10);

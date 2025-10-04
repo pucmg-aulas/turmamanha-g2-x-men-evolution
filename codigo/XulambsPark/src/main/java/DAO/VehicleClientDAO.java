@@ -1,13 +1,13 @@
 package DAO;
 
-import util.DatabaseUtil;
-
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
+
+import util.DatabaseUtil;
 
 public class VehicleClientDAO {
 
@@ -34,7 +34,7 @@ public class VehicleClientDAO {
         }
         return vehicles;
     }
-
+// Problemas de arquitetura 16 VehicleClientDAO linha 37- Classe interna Vehicle duplicando funcionalidade do modelo principal, violando DRY e causando confusão, seria recomendado usar DTOs
     public static class Vehicle {
         private String placa;
         private String model;

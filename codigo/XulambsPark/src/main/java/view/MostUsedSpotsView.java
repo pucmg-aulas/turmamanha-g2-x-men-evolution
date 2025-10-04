@@ -8,7 +8,7 @@ import javafx.stage.Stage;
 
 public class MostUsedSpotsView {
     private AdminController adminController;
-
+// Problemas de arquitetura 20 MostUsedSpotsView, RushHourView - Views com tratamento de exceções genérico apenas imprimindo stack trace, dificultando diagnóstico e experiência do usuário
     public MostUsedSpotsView(AdminController adminController) {
         this.adminController = adminController;
     }

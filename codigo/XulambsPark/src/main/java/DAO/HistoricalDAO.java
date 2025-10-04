@@ -1,13 +1,15 @@
 // HistoricalDAO.java
 package DAO;
 
-import model.Historical;
-import util.DatabaseUtil;
-
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+
+import model.Historical;
+import util.DatabaseUtil;
+
+// Problemas de arquitetura 13 HistoricalDAO linha 13- Métodos save e update com responsabilidades demais, seria recomendado implementar padrão Repository
 
 public class HistoricalDAO {
 

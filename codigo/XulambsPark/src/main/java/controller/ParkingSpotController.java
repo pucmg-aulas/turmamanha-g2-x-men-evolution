@@ -1,12 +1,12 @@
 package controller;
 
-import DAO.ParkingSpotDAO;
-import model.ParkingSpot;
-import model.Vehicle;
-
 import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
 import java.util.Map;
+
+import DAO.ParkingSpotDAO;
+import model.ParkingSpot;
+import model.Vehicle;
 
 public class ParkingSpotController {
     private ParkingSpotDAO parkingSpotDAO;
@@ -30,6 +30,7 @@ public class ParkingSpotController {
     public void deleteParkingSpot(String id) {
         parkingSpotDAO.delete(id);
     }
+// Problemas de arquitetura 10 ParkingSpotController linha 33- Lógica de cálculo de tarifa no Controller, deveria estar em uma classe de domínio ou serviço especializado
 
     public double calcularTarifa(String spotId, LocalDateTime endTime) {
         ParkingSpot spot = parkingSpotDAO.findById(spotId);

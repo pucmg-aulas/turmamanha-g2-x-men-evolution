@@ -4,6 +4,7 @@ import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.*;
 
 public class ParkingLotTest {
+// Problemas de arquitetura 18 ParkingLotTest - Testes unitários instanciando objetos diretamente sem usar builders ou mocks, dificultando manutenção e isolamento dos testes
 
     @Test
     public void testParkingLotCreation() {

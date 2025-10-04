@@ -1,11 +1,23 @@
 package DAO;
 
-import model.*;
-import util.DatabaseUtil;
-
-import java.sql.*;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
 import java.util.LinkedHashMap;
 import java.util.Map;
+
+import model.ITipoVaga;
+import model.ParkingLot;
+import model.ParkingSpot;
+import model.SpotType;
+import model.VagaIdoso;
+import model.VagaPCD;
+import model.VagaRegular;
+import model.VagaVIP;
+import model.Vehicle;
+import util.DatabaseUtil;
 
 public class ParkingLotDAO {
     private Map<String, ParkingLot> parkingLots = new LinkedHashMap<>();
@@ -46,7 +58,7 @@ public class ParkingLotDAO {
             e.printStackTrace();
         }
     }
-
+// Problemas de arquitetura 12 - padrão DAO não pode ter lógica de negócio interna, seria recomendado criar uma factory para dividir essa responsabilidade
     private ITipoVaga convertSpotTypeToITipoVaga(SpotType type) {
         switch (type) {
             case IDOSO:

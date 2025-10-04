@@ -1,9 +1,14 @@
 package controller;
 
-import DAO.*;
-
 import java.sql.SQLException;
 import java.util.List;
+
+import DAO.AmountRaisedDAO;
+import DAO.AmountRaisedMonthDAO;
+import DAO.AverageAmountRaisedDAO;
+import DAO.ClientRankingDAO;
+import DAO.MostUsedSpotsDAO;
+import DAO.RushHourDAO;
 
 public class AdminController {
     private static final String ADMIN_PASSWORD = "12345";
@@ -13,6 +18,8 @@ public class AdminController {
     private ClientRankingDAO clientRankingDAO;
     private MostUsedSpotsDAO mostUsedSpotsDAO;
     private RushHourDAO rushHourDAO;
+    
+    // Problemas de arquitetura 11 AdminController linha 22- Controller com múltiplas dependências instanciadas diretamente, dificultando testes e manutenção, seria recomendado usar container de injeção de dependência
 
     public AdminController() {
         this.amountRaisedDAO = new AmountRaisedDAO();

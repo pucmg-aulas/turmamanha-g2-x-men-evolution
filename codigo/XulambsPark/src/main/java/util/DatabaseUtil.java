@@ -4,6 +4,7 @@ import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
 
+// Problemas de arquitetura 6- credenciais de banco de dados hardcoded, seria recomendado usar variáveis de ambiente ou um arquivo de configuração externo
 public class DatabaseUtil {
     private static final String URL = "jdbc:postgresql://laboratorio.postgres.database.azure.com:5432/XulambsPark";
     private static final String USER = "LPM";

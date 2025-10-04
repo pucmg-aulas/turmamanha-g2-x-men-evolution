@@ -1,17 +1,22 @@
 // Java
 package controller;
 
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
+import java.util.Map;
+import java.util.UUID;
+
 import DAO.ClientDAO;
 import exceptions.ClientRegistrationException;
 import exceptions.ClientRetrievalException;
 import model.Client;
 import view.ClientView;
 
-import java.util.*;
-
 public class ClientController {
     private Map<String, Client> clients;
     private ClientDAO clientDAO;
+// Problemas de arquitetura 9 ClientController linha 15- Controller instancia diretamente o DAO, aumentando acoplamento, seria recomendado usar interfaces e injeção de dependência
 
     public ClientController() {
         this.clientDAO = new ClientDAO();

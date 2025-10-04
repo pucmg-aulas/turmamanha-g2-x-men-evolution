@@ -14,6 +14,7 @@ import util.DatabaseUtil;
 
 public class MainView extends Application {
     private ParkingLotController controller;
+// Problemas de arquitetura 8 MainView linha 17- View instancia diretamente o Controller no construtor, violando o princípio de inversão de dependência, seria recomendado usar injeção de dependência
 
     public MainView() {
         this.controller = new ParkingLotController();
